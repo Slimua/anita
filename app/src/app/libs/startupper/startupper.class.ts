@@ -1,6 +1,7 @@
 import { dbInstances } from 'app/data/local-dbs/db-instances.const'
 import { CLIENT_SEZ_DEFINITIONS, previousVersions } from 'app/data/system-local-db/client-sections.enum'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
+import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 import { DbConnector } from 'app/libs/db-connector/db-connector.class'
 import { INDEXEDDB_PLUGIN } from 'app/libs/db-connector/plugins/indexed-db/exporter.constant'
 import { Logger } from 'app/libs/logger/logger.class'
@@ -44,5 +45,6 @@ export class Startupper {
    */
   private initCloudConnectors (): void {
     DropboxHelper.init()
+    WordpressHelper.init()
   }
 }

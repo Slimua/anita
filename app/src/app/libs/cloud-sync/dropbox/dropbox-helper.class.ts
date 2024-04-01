@@ -8,7 +8,7 @@ import { Dropbox, DropboxAuth, DropboxResponse, files } from 'dropbox'
  * API reference: https://www.dropbox.com/developers/documentation/http/documentation
  */
 
-export class DropboxHelper extends CloudSyncBase {
+export class DropboxHelper extends CloudSyncBase<SupportedCloud.DROPBOX> {
   public static instance: DropboxHelper
   private static contentHashByFileId: { [fileId: string]: string } = {}
 
