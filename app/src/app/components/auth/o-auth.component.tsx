@@ -1,30 +1,40 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
+import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { SupportedCloud } from 'app/libs/cloud-sync/cloud-sync-base.class'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { OAuthUtils } from 'app/libs/cloud-sync/o-auth-utils.class'
 import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 import { ANITA_URLS } from 'app/libs/routing/anita-routes.constant'
 import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 const onClick = () => {
-  // close window
   window.close()
 }
 
 export const OAuth: React.FC = () => {
+  const { showModal } = useModalContext()
   const data = OAuthUtils.parseQueryString()
+  const navigate = useNavigate()
+
+  const code = data.code
+  const service = data.service ?? SupportedCloud.DROPBOX
+  const label = service === SupportedCloud.WORDPRESS ? 'WordPress' : 'Dropbox'
+  const helper = React.useMemo(() => (service === SupportedCloud.WORDPRESS ? WordpressHelper.instance : DropboxHelper.instance), [service])
+
+  React.useEffect(() => {
+    helper.getAccessTokenFromCode(code, showModal)
+  }, [code, helper])
 
   if (!data?.code) {
     return <Navigate to={ANITA_URLS.projectsList} />
   }
 
-  const service = data.service ?? SupportedCloud.DROPBOX
-  const label = service === SupportedCloud.WORDPRESS ? 'WordPress' : 'Dropbox'
-  const helper = service === SupportedCloud.WORDPRESS ? WordpressHelper.instance : DropboxHelper.instance
-  helper.getAccessTokenFromCode(data.code)
+  const goToProjectsList = () => {
+    navigate(ANITA_URLS.projectsList)
+  }
 
   return (
     <div className="container px-0 md:px2 lg:px-5 pt-20 md:pt-24 mx-auto">
@@ -36,10 +46,10 @@ export const OAuth: React.FC = () => {
           <div className="flex justify-center">
             <Button
               id="close"
-              label="Close window"
+              label={service === SupportedCloud.WORDPRESS ? 'Go to projects list' : 'Close'}
               type={Type.primary}
               size="lg"
-              onClick={onClick}
+              onClick={service === SupportedCloud.WORDPRESS ? goToProjectsList : onClick}
               marginClassName="mt-4"
             />
           </div>

@@ -85,9 +85,9 @@ export class CloudSyncBase<T extends SupportedCloud> {
     }
   }
 
-  protected storeDataForService (data: TDataForTable<T>) {
-    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).put({ ...data, service: this.service } as TAccountsTable<T>)
-  }
+  protected storeDataForService = (data: TDataForTable<T>) => (
+    CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).put({ ...data, service: this.service } as TAccountsTable<T>)
+  )
 
   protected getDataForService (): Promise<ICloudSyncDB<T>['accounts'] | undefined> {
     return CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).get({ service: this.service })

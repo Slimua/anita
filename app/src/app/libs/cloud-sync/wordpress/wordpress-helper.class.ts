@@ -1,12 +1,15 @@
+import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
+import { IModalProps } from 'app/components/shared-components/modals/modal.component'
 import { CloudSyncBase, SupportedCloud } from 'app/libs/cloud-sync/cloud-sync-base.class'
+import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
 
 /**
  * API reference: Anita Project Manager Wordpress plugin
  */
 
 export interface IWordPressAuthData {
-  accessToken: string
-  refreshToken: string
+  access_token: string
+  refresh_token: string
   remoteBaseUrl: string
 }
 
@@ -18,23 +21,36 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
     return WordpressHelper.instance
   }
 
-  private BASE_URL: string = ''
+  private clientsByRemote: Record<string, InstanceType<typeof WordPressClient>> = {}
 
   constructor () {
     super(SupportedCloud.WORDPRESS)
     CloudSyncBase.initDB()
-    this.setBaseUrl()
   }
 
-  public async getAccessTokenFromCode (code: string) {
-    const authData: IWordPressAuthData = JSON.parse(atob(code))
-    if (authData.accessToken && authData.refreshToken) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async getAccessTokenFromCode (code: string, showModal: (modalProps: IModalProps) => void) {
+    const unencodedData = atob(code)
+    const authData: IWordPressAuthData = JSON.parse(unencodedData)
+    if (authData.access_token && authData.refresh_token) {
       this.storeDataForService(authData)
+      this.clientsByRemote[authData.remoteBaseUrl] = new WordPressClient(authData)
+      try {
+        const res = await this.clientsByRemote[authData.remoteBaseUrl].getSpaceInfo()
+        console.log('getAccessTokenFromCode ~ res:', res)
+        if (res?.message === 'Token tampered') {
+          showModal({
+            isOpen: true,
+            title: 'Error',
+            hideCancelButton: true,
+            type: Type.primary,
+            actionText: 'OK',
+            children: 'Token tampered'
+          })
+        }
+      } catch (error: unknown) {
+        console.error('Error getting space info:', error)
+      }
     }
-  }
-
-  private setBaseUrl () {
-    const base = `${window.location.origin}/`
-    this.BASE_URL = window.location.href.includes('localhost') ? base : `${base}app/`
   }
 }

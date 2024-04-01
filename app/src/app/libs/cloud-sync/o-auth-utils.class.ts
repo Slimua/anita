@@ -16,7 +16,7 @@ export class OAuthUtils {
 
   public static parseQueryString () {
     const ret = Object.create(null)
-    const urlParams = window.location.href.split(UNIQUE_DATA_SEPARATOR)[1]
+    const urlParams = window.location.href.split(UNIQUE_DATA_SEPARATOR)[1] ?? window.location.href.split('?')[1]
 
     urlParams?.split('&').forEach((param) => {
       const parts = param.replace(/\+/g, ' ').split('=')

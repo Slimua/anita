@@ -5,15 +5,15 @@ export type TModalContext = {
   showModal: (modalProps: IModalProps) => void
   updateModal: (newModalProps: Partial<IModalProps>) => void
   hideModal: () => void
-  modalProps: IModalProps | null
+  modalProps: Partial<IModalProps> | null
  };
 
-const initalState: TModalContext = {
+const initialState: TModalContext = {
   showModal: () => {},
   updateModal: () => {},
   hideModal: () => {},
   modalProps: null
 }
 
-export const ModalContext = createContext(initalState)
+export const ModalContext = createContext(initialState)
 export const useModalContext = () => useContext(ModalContext)

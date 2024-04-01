@@ -1,14 +1,13 @@
-import React, { Fragment, ReactNode } from 'react'
+import React, { Fragment, ReactNode, useState } from 'react'
 import { Icons, TIconName } from 'app/libs/icons/icons.class'
 import ReactDOM from 'react-dom'
 import { ModalContext, useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Dialog, Transition } from '@headlessui/react'
 import { Button, IButtonWithTooltipProps } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useMultiState } from 'app/components/hooks/multi-state.hook'
 
-export interface IModalProps {
-  isOpen?: boolean
+interface IModalPropsOpen {
+  isOpen?: true
   title: string
   actionText: string
   type: Type.primary | Type.danger
@@ -24,18 +23,26 @@ export interface IModalProps {
   handleOnClose?: () => void
 }
 
+// When isOpen is false or not provided
+interface IModalPropsClosed {
+  isOpen: false
+}
+
+// Union type
+export type IModalProps = IModalPropsOpen | IModalPropsClosed;
+
 const Modal: React.FC<IModalProps> = (props) => {
   const { hideModal } = useModalContext()
   const handleActionClick = () => {
-    props.handleClickAction?.()
+    (props as IModalPropsOpen).handleClickAction?.()
     hideModal()
   }
   const cancelAction = () => {
-    props.handleClickCancel?.()
+    (props as IModalPropsOpen).handleClickCancel?.()
     hideModal()
   }
   const onCloseAction = () => {
-    props.handleOnClose?.()
+    (props as IModalPropsOpen).handleOnClose?.()
   }
   return (
     <Transition.Root show={props.isOpen} as={Fragment}>
@@ -65,29 +72,29 @@ const Modal: React.FC<IModalProps> = (props) => {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-lg sm:p-6">
                 <div className="sm:flex sm:items-start">
-                  {props.icon && (
+                  {(props as IModalPropsOpen).icon && (
                     <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                      {Icons.render(props.icon, `${props.iconClassName} text-xl -mt-1`)}
+                      {Icons.render((props as IModalPropsOpen).icon!, `${(props as IModalPropsOpen).iconClassName} text-xl -mt-1`)}
                     </div>
                   )}
                   <div className="text-left w-full">
                     <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
-                      {props.title}
+                      {(props as IModalPropsOpen).title}
                     </Dialog.Title>
                     <div className="mt-2">
-                      {props.children}
+                      {(props as IModalPropsOpen).children}
                     </div>
                   </div>
                 </div>
-                {!props.hideActionRow && (
+                {!(props as IModalPropsOpen).hideActionRow && (
                   <div className="flex items-center justify-end mt-5 sm:mt-4">
-                    {props.leftButton && (
+                    {(props as IModalPropsOpen).leftButton && (
                       <Button
-                        {...props.leftButton}
+                        {...(props as IModalPropsOpen).leftButton!}
                         marginClassName="mr-auto"
                       />
                     )}
-                    {props.hideCancelButton !== true && (
+                    {(props as IModalPropsOpen).hideCancelButton !== true && (
                       <Button
                         id="cancel"
                         label="Cancel"
@@ -97,10 +104,10 @@ const Modal: React.FC<IModalProps> = (props) => {
                     )}
                     <Button
                       id="action-button"
-                      type={props.type}
-                      label={props.actionText}
+                      type={(props as IModalPropsOpen).type!}
+                      label={(props as IModalPropsOpen).actionText!}
                       onClick={handleActionClick}
-                      disabled={props.disableAction}
+                      disabled={(props as IModalPropsOpen).disableAction}
                     />
                   </div>)}
               </Dialog.Panel>
@@ -120,7 +127,6 @@ const ModalContainer: React.FC<IModalProps> = (props) => (
 )
 
 const DEFAULT_MODAL_STATE: IModalProps = {
-  isOpen: false,
   type: Type.primary,
   title: '',
   actionText: '',
@@ -137,25 +143,27 @@ const DEFAULT_MODAL_STATE: IModalProps = {
 }
 
 export const ModalProvider: React.FC<{children: React.ReactNode}> = (props) => {
-  const [state, setState] = useMultiState<IModalProps>({ ...DEFAULT_MODAL_STATE })
-  const showModal = (modalProps: IModalProps) => {
+  const [state, setState] = useState<IModalProps>({ isOpen: false })
+  const showModal = React.useCallback((modalProps: IModalProps) => {
     setState({
       ...DEFAULT_MODAL_STATE,
       ...modalProps,
       isOpen: true
-    })
-  }
+    } as IModalPropsOpen)
+  }, [])
 
-  const hideModal = () => {
+  const hideModal = React.useCallback(() => {
     setState({ isOpen: false })
-  }
+  }, [])
 
-  const updateModal = (newModalProps: Partial<IModalProps>) => {
-    setState({ ...newModalProps })
-  }
+  const updateModal = React.useCallback((newModalProps: Partial<IModalProps>) => {
+    setState({ ...newModalProps } as IModalPropsOpen | IModalPropsClosed)
+  }, [])
+
+  const value = React.useMemo(() => ({ modalProps: state, showModal, hideModal, updateModal }), [state, showModal, hideModal, updateModal])
 
   return (
-    <ModalContext.Provider value={{ modalProps: state, showModal, hideModal, updateModal }}>
+    <ModalContext.Provider value={value}>
       <ModalContainer {...state} />
       {props.children}
     </ModalContext.Provider>
