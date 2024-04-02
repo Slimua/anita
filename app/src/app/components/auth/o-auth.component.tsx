@@ -26,6 +26,7 @@ export const OAuth: React.FC = () => {
 
   React.useEffect(() => {
     helper.getAccessTokenFromCode(code, showModal)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, helper])
 
   if (!data?.code) {

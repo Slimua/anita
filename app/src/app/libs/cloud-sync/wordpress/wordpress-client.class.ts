@@ -26,6 +26,7 @@ export class WordPressClient {
 
     this.axiosInstance.interceptors.response.use((response) => response, async (error) => {
       if (error.response?.data?.code === 'rest_token_tampered') {
+        console.log('this.axiosInstance.interceptors.response.use ~ error.response?.data:', error.response?.data)
         return Promise.resolve({ message: 'Token tampered' })
       }
       if (error.response?.data?.code === 'rest_token_expired') {
@@ -53,5 +54,9 @@ export class WordPressClient {
       console.error('Error fetching space info:', error)
       throw error
     }
+  }
+
+  public openLoginPage (): void {
+    window.open(`${this.authData.remoteBaseUrl}/index.php?anita_oauth=1`)
   }
 }

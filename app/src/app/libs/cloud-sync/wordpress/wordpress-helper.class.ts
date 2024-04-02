@@ -38,14 +38,16 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
       try {
         const res = await this.clientsByRemote[authData.remoteBaseUrl].getSpaceInfo()
         console.log('getAccessTokenFromCode ~ res:', res)
-        if (res?.message === 'Token tampered') {
+        const cleanRemoteUrl = authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
+        if (res?.message === 'Token tampered' || res?.message === 'Token expired') {
           showModal({
             isOpen: true,
-            title: 'Error',
+            title: 'Authentication error',
             hideCancelButton: true,
             type: Type.primary,
-            actionText: 'OK',
-            children: 'Token tampered'
+            actionText: 'Open login page',
+            children: `There is an issue with the your authentication data. Please re-authenticate on ${cleanRemoteUrl}.`,
+            handleClickAction: () => this.clientsByRemote[authData.remoteBaseUrl].openLoginPage()
           })
         }
       } catch (error: unknown) {
