@@ -39,7 +39,10 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
         const res = await this.clientsByRemote[authData.remoteBaseUrl].getSpaceInfo()
         console.log('getAccessTokenFromCode ~ res:', res)
         const cleanRemoteUrl = authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
-        if (res?.message === 'Token tampered' || res?.message === 'Token expired') {
+        if (res.statusText === 'OK') {
+          const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
+          this.saveRemoteInfo(remoteId, res.data)
+        } else if (res?.statusText === 'Token tampered' || res?.statusText === 'Token expired') {
           showModal({
             isOpen: true,
             title: 'Authentication error',

@@ -2,9 +2,10 @@ import { Manager } from 'app/libs/manager/manager.class'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import Dexie from 'dexie'
 import { IWordPressAuthData } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
+import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress'
 import { IDropboxTokens } from './cloud-sync.const'
 
-const DB_VERSION = 4
+const DB_VERSION = 6
 
 export enum SupportedCloud {
   DROPBOX = 'dropbox',
@@ -26,7 +27,8 @@ type TAccountsTable<T extends SupportedCloud> = T extends SupportedCloud.DROPBOX
 enum CloudSyncTable {
   ACCOUNTS = 'accounts',
   SYNC_INFO = 'syncInfo',
-  FILES_INFO = 'filesInfo'
+  FILES_INFO = 'filesInfo',
+  REMOTES_INFO = 'remotesInfo'
 }
 
 interface ICloudSyncDB<T extends SupportedCloud> {
@@ -38,6 +40,10 @@ interface ICloudSyncDB<T extends SupportedCloud> {
   [CloudSyncTable.FILES_INFO]: {
     projectId: string
     fileId: string
+  }
+  [CloudSyncTable.REMOTES_INFO]: {
+    remoteId: string
+    data: IWordPressSpaceInfo
   }
 }
 
@@ -80,7 +86,8 @@ export class CloudSyncBase<T extends SupportedCloud> {
       CloudSyncBase.DB.version(DB_VERSION).stores({
         [CloudSyncTable.ACCOUNTS]: 'service',
         [CloudSyncTable.SYNC_INFO]: 'projectId',
-        [CloudSyncTable.FILES_INFO]: 'projectId'
+        [CloudSyncTable.FILES_INFO]: 'projectId',
+        [CloudSyncTable.REMOTES_INFO]: 'remoteId'
       })
     }
   }
@@ -103,5 +110,9 @@ export class CloudSyncBase<T extends SupportedCloud> {
 
   public static async deleteLastSync <T extends SupportedCloud> (projectId: string): Promise<void> {
     return CloudSyncBase.DB!.table<ICloudSyncDB<T>['syncInfo']>(CloudSyncTable.SYNC_INFO).delete(projectId)
+  }
+
+  protected async saveRemoteInfo (remoteId: string, data: IWordPressSpaceInfo) {
+    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['remotesInfo']>(CloudSyncTable.REMOTES_INFO).put({ remoteId, data })
   }
 }
