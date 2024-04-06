@@ -18,7 +18,8 @@ export enum FORM_COMPONENTS_CODES {
   dateTimePicker = 9,
   childOfSelectorForSection = 10,
   parentsSelector = 11,
-  basicTextarea = 12
+  basicTextarea = 12,
+  remoteSelector = 13
 }
 
 /**

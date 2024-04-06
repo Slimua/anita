@@ -92,7 +92,7 @@ export interface IBasicRadio<T> extends ICommonTypes<T> {
 }
 
 export interface IBasicSelect<T> extends ICommonTypes<T> {
-  componentCode: FORM_COMPONENTS_CODES.basicSelect | FORM_COMPONENTS_CODES.childOfSelectorForSection | FORM_COMPONENTS_CODES.parentsSelector
+  componentCode: FORM_COMPONENTS_CODES.basicSelect | FORM_COMPONENTS_CODES.childOfSelectorForSection | FORM_COMPONENTS_CODES.parentsSelector | FORM_COMPONENTS_CODES.remoteSelector
   options: Array<IOptionKeysModel>
   value?: string | number
   required?: boolean
@@ -128,4 +128,5 @@ interface ICommonTypes<T> {
   width?: string
   externalLabel?: boolean
   type?: never | TextInputSupportedTypes
+  advancedModeOnly?: boolean
 }

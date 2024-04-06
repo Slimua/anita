@@ -46,6 +46,7 @@ export interface IProjectSettings {
   [RESERVED_FIELDS.createdAt]: string
   [RESERVED_FIELDS.updatedAt]?: string
   localStorage?: LOCAL_STORAGE_SYSTEMS
+  remoteStorage?: string
   encrypted?: boolean
   cloudSync?: {
     dropbox?: string

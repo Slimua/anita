@@ -2,7 +2,7 @@ import { Manager } from 'app/libs/manager/manager.class'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import Dexie from 'dexie'
 import { IWordPressAuthData } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
-import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress'
+import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
 import { IDropboxTokens } from './cloud-sync.const'
 
 const DB_VERSION = 6
@@ -114,5 +114,13 @@ export class CloudSyncBase<T extends SupportedCloud> {
 
   protected async saveRemoteInfo (remoteId: string, data: IWordPressSpaceInfo) {
     return CloudSyncBase.DB!.table<ICloudSyncDB<T>['remotesInfo']>(CloudSyncTable.REMOTES_INFO).put({ remoteId, data })
+  }
+
+  public async getAllRemotesInfo (): Promise<Array<ICloudSyncDB<T>['remotesInfo']>> {
+    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['remotesInfo']>(CloudSyncTable.REMOTES_INFO).toArray()
+  }
+
+  public async getRemoteInfo (remoteId: string): Promise<ICloudSyncDB<T>['remotesInfo'] | undefined> {
+    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['remotesInfo']>(CloudSyncTable.REMOTES_INFO).get(remoteId)
   }
 }

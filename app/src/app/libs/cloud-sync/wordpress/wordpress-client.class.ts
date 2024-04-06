@@ -1,4 +1,4 @@
-import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress'
+import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
 import axios, { AxiosInstance } from 'axios'
 
 interface IWordPressAuthData {

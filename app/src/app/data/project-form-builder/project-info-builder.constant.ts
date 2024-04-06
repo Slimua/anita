@@ -66,7 +66,16 @@ export const projectInfoNewItem: Array<FormFieldsModel<IProjectSettings>> = [
     value: LOCAL_STORAGE_SYSTEMS.IndexedDB,
     label: 'Local storage',
     required: true,
-    options: availableSystems
+    options: availableSystems,
+    advancedModeOnly: true
+  },
+  {
+    componentCode: FORM_COMPONENTS_CODES.remoteSelector,
+    fieldName: 'remoteStorage',
+    value: LOCAL_STORAGE_SYSTEMS.IndexedDB,
+    label: 'Remote storage',
+    required: false,
+    options: [] // to be filled by the component itself with the available remote storage options
   }
 ]
 

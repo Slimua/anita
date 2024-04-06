@@ -11,6 +11,7 @@ import { HiddenInput } from 'app/components/shared-components/forms-automator/fo
 import { OptionsMaker } from 'app/components/shared-components/forms-automator/form-fields/options-maker.component'
 import { ParentsSelector } from 'app/components/shared-components/forms-automator/form-fields/parents-selector.component'
 import React from 'react'
+import { RemoteSelector } from 'app/components/shared-components/forms-automator/form-fields/remote-selector.component'
 
 export function formElesSwitcher (key: string, componentCode: FORM_COMPONENTS_CODES, props: ICommonFormEleProps) {
   const codaAsInt = typeof componentCode === 'number' ? componentCode : parseInt(componentCode, 10)
@@ -35,6 +36,8 @@ export function formElesSwitcher (key: string, componentCode: FORM_COMPONENTS_CO
       return <ChildOfSelectorForSection key={key} {...props as ICommonFormEleProps<IBasicSelect<ISectionElement>>} />
     case FORM_COMPONENTS_CODES.parentsSelector:
       return <ParentsSelector key={key} {...props as ICommonFormEleProps<IBasicSelect<ISectionElement>>} />
+    case FORM_COMPONENTS_CODES.remoteSelector:
+      return <RemoteSelector key={key} {...props as ICommonFormEleProps<IBasicSelect<ISectionElement>>} />
     default:
       return <BasicInput key={key} {...props} />
   }
