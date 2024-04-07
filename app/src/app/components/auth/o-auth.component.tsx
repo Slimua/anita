@@ -2,7 +2,7 @@
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { useModalContext } from 'app/components/shared-components/modals/modal-context'
-import { SupportedCloud } from 'app/libs/cloud-sync/cloud-sync-base.class'
+import { SupportedCloud } from 'app/cross-refs-exports'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { OAuthUtils } from 'app/libs/cloud-sync/o-auth-utils.class'
 import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'

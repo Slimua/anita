@@ -1,5 +1,5 @@
 import { IModalProps } from 'app/components/shared-components/modals/modal.component'
-import { CloudSyncBase, SupportedCloud } from 'app/libs/cloud-sync/cloud-sync-base.class'
+import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { IDropboxTokens, ISharedFileMeta } from 'app/libs/cloud-sync/cloud-sync.const'
 import { IS_SYNCING } from 'app/libs/cloud-sync/sync-manager.const'
 import { TAnitaUniversalDataStorage } from 'app/models/project/project.declarations'

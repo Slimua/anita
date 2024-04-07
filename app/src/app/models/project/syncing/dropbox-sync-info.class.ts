@@ -1,7 +1,7 @@
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { CloudSyncState } from 'app/libs/cloud-sync/cloud-sync.const'
 
-export class SyncInfo {
+export class DropboxSyncInfo {
   private cloudSyncState: CloudSyncState | null = null
   private linkedFileId: string | null = null
   private localStorage: LOCAL_STORAGE_SYSTEMS | null = null

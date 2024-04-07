@@ -8,7 +8,7 @@ import { useModalContext } from 'app/components/shared-components/modals/modal-c
 import { IModalProps } from 'app/components/shared-components/modals/modal.component'
 import { ISharedFileMeta } from 'app/libs/cloud-sync/cloud-sync.const'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { TextTools } from 'app/libs/tools/text-tools.class'
 import React, { useEffect, useRef, useState } from 'react'
 

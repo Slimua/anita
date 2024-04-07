@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 
 export const ProjectsList: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState(false)

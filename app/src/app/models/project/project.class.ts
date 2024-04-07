@@ -12,10 +12,10 @@ import { ParentInfoForDetailsView } from 'app/models/parent-element/parent-eleme
 import { ProjectUploader } from 'app/models/project/syncing/project-uploader'
 import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
 import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
-import { SyncInfo } from 'app/models/project/syncing/sync-info.class'
+import { DropboxSyncInfo } from 'app/models/project/syncing/dropbox-sync-info.class'
 
 export class Project {
-  public syncInfo: SyncInfo = new SyncInfo()
+  public dropBoxSyncInfo: DropboxSyncInfo = new DropboxSyncInfo()
 
   private settings: TSystemData[RESERVED_AUDS_KEYS._settings][0]
   private sectionsDefinitions: TSystemData[RESERVED_AUDS_KEYS._sections]

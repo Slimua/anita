@@ -3,10 +3,10 @@ import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { liveQuery, Subscription } from 'dexie'
-import { CloudSyncBase } from 'app/libs/cloud-sync/cloud-sync-base.class'
 import { CloudSyncState, IDropboxTokens } from 'app/libs/cloud-sync/cloud-sync.const'
 import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { FILE_PICKER_MODAL_CONFIG } from 'app/components/admin-layout/header/cloud-sync-file-picker'
+import { CloudSyncBase } from 'app/cross-refs-exports'
 
 interface ICloudSyncButtonConnectProps {
   setCloudSyncState: (cloudSyncState: CloudSyncState) => void

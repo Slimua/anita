@@ -1,6 +1,6 @@
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { IModalProps } from 'app/components/shared-components/modals/modal.component'
-import { CloudSyncBase, SupportedCloud } from 'app/libs/cloud-sync/cloud-sync-base.class'
+import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
 
 /**
@@ -21,8 +21,6 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
     return WordpressHelper.instance
   }
 
-  private clientsByRemote: Record<string, InstanceType<typeof WordPressClient>> = {}
-
   constructor () {
     super(SupportedCloud.WORDPRESS)
     CloudSyncBase.initDB()
@@ -33,12 +31,12 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
     const unencodedData = atob(code)
     const authData: IWordPressAuthData = JSON.parse(unencodedData)
     if (authData.access_token && authData.refresh_token) {
-      this.storeDataForService(authData)
-      this.clientsByRemote[authData.remoteBaseUrl] = new WordPressClient(authData)
+      const cleanRemoteUrl = authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
+      this.storeDataForService(authData, cleanRemoteUrl)
+      const client = new WordPressClient(authData)
       try {
-        const res = await this.clientsByRemote[authData.remoteBaseUrl].getSpaceInfo()
+        const res = await client.getSpaceInfo()
         console.log('getAccessTokenFromCode ~ res:', res)
-        const cleanRemoteUrl = authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
         if (res.statusText === 'OK') {
           const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
           this.saveRemoteInfo(remoteId, res.data)
@@ -50,11 +48,36 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
             type: Type.primary,
             actionText: 'Open login page',
             children: `There is an issue with the your authentication data. Please re-authenticate on ${cleanRemoteUrl}.`,
-            handleClickAction: () => this.clientsByRemote[authData.remoteBaseUrl].openLoginPage()
+            handleClickAction: () => client.openLoginPage()
           })
         }
       } catch (error: unknown) {
         console.error('Error getting space info:', error)
+      }
+    }
+  }
+
+  public async getClient (remoteId: string): Promise<WordPressClient | undefined> {
+    const authData = await this.getDataForService(remoteId)
+    if (!authData) {
+      // TODO show modal to re-authenticate
+      return
+    }
+    return new WordPressClient(authData)
+  }
+
+  public fetchAllRemotes = async () => {
+    const remotes = await this.getAllAccounts()
+    if (remotes?.length) {
+      for (const remote of remotes) {
+        if (remote.service === SupportedCloud.DROPBOX) {
+          continue
+        }
+        const client = await this.getClient(remote.service)
+        if (client) {
+          const projects = await client.getProjects()
+          console.log('fetchAllRemotes= ~ projects:', projects.data)
+        }
       }
     }
   }

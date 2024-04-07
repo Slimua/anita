@@ -1,7 +1,7 @@
 import { FormFieldsModel, TSupportedFormsTypes } from 'app/components/shared-components/forms-automator/form-automator.types'
 import { FORM_COMPONENTS_CODES } from 'app/components/shared-components/forms-automator/form-component-codes.enum'
 import { Icons } from 'app/libs/icons/icons.class'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import React from 'react'
 
 interface IProjectSectionListTableHeadThProps {

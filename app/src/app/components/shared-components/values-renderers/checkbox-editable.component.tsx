@@ -1,5 +1,5 @@
 import { Checkbox } from 'app/components/shared-components/common-ui-eles/checkbox.component'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
 import React from 'react'
 

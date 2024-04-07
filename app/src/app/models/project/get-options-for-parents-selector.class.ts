@@ -1,5 +1,5 @@
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { ArrayTools } from 'app/libs/tools/array-tools.class'
 import { Project } from 'app/models/project/project.class'
 import { IOptionKeysModel, OptionKeysModelGroup } from 'app/components/shared-components/forms-automator/form-automator.types'

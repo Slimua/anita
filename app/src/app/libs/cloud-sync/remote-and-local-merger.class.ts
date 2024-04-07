@@ -1,11 +1,10 @@
 import { RESERVED_AUDS_KEYS, TAnitaUniversalDataStorage, TSystemData } from 'app/models/project/project.declarations'
 import { IComparisonResult } from 'app/models/project/syncing/project-comparator'
-import { Manager } from 'app/libs/manager/manager.class'
+import { CloudSyncBase, Manager } from 'app/cross-refs-exports'
 import { Project } from 'app/models/project/project.class'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
 import { IS_SYNCING, LAST_SYNCED_ID } from 'app/libs/cloud-sync/sync-manager.const'
-import { CloudSyncBase } from 'app/libs/cloud-sync/cloud-sync-base.class'
 
 export class RemoteAndLocalMerger {
   private project: Project

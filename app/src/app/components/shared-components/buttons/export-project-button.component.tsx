@@ -1,4 +1,4 @@
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import React from 'react'
 import { Dropdown, IMenuItem } from 'app/components/shared-components/common-ui-eles/dropdown.component'
 import { ExportScope } from 'app/models/project/project-exporter.class'

@@ -5,7 +5,7 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
 
 interface IProjectSectionElementDeleteButtonProps {

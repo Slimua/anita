@@ -1,4 +1,4 @@
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import Dexie from 'dexie'
 import { IWordPressAuthData } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
@@ -92,12 +92,12 @@ export class CloudSyncBase<T extends SupportedCloud> {
     }
   }
 
-  protected storeDataForService = (data: TDataForTable<T>) => (
-    CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).put({ ...data, service: this.service } as TAccountsTable<T>)
+  protected storeDataForService = (data: TDataForTable<T>, idToUse?: string) => (
+    CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).put({ ...data, service: idToUse || this.service } as TAccountsTable<T>)
   )
 
-  protected getDataForService (): Promise<ICloudSyncDB<T>['accounts'] | undefined> {
-    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).get({ service: this.service })
+  protected getDataForService (idToUse?: string): Promise<ICloudSyncDB<T>['accounts'] | undefined> {
+    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).get({ service: idToUse || this.service })
   }
 
   public async setLastSync (projectId: string) {
@@ -122,5 +122,9 @@ export class CloudSyncBase<T extends SupportedCloud> {
 
   public async getRemoteInfo (remoteId: string): Promise<ICloudSyncDB<T>['remotesInfo'] | undefined> {
     return CloudSyncBase.DB!.table<ICloudSyncDB<T>['remotesInfo']>(CloudSyncTable.REMOTES_INFO).get(remoteId)
+  }
+
+  protected async getAllAccounts (): Promise<Array<ICloudSyncDB<T>['accounts']>> {
+    return CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).toArray()
   }
 }

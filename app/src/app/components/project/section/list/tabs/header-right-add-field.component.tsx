@@ -3,7 +3,7 @@ import { SectionFormModelManager } from 'app/components/projects/add-edit-projec
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { useModalContext } from 'app/components/shared-components/modals/modal-context'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
 import React from 'react'

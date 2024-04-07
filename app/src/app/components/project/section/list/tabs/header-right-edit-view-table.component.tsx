@@ -2,7 +2,7 @@ import { Button } from 'app/components/shared-components/common-ui-eles/button.c
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { Toggle } from 'app/components/shared-components/common-ui-eles/toggle.component'
 import { useModalContext } from 'app/components/shared-components/modals/modal-context'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import React from 'react'
 import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'

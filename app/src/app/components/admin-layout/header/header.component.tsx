@@ -9,7 +9,8 @@ import { CloudSyncButton } from 'app/components/admin-layout/header/cloud-sync-b
 import { RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { LocalFsInfo } from 'app/components/admin-layout/header/local-fs-info'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
+import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 
 export const AdminLayoutHeader: React.FC = () => {
   const sidebarHideClass = useSelector((store: AnitaStore) => store.layout.sidebar)
@@ -22,9 +23,14 @@ export const AdminLayoutHeader: React.FC = () => {
 
   useEffect(() => {
     if (localStorage) {
-      Manager.getCurrentProject()?.syncInfo.setLocalStorage(localStorage)
+      Manager.getCurrentProject()?.dropBoxSyncInfo.setLocalStorage(localStorage)
     }
   }, [localStorage])
+
+  useEffect(() => {
+    // TEST TO FETCH PROJECTS
+    WordpressHelper.instance.fetchAllRemotes()
+  }, [])
 
   return (
     <div className={`bg-white text-gray-700 flex items-center h-14 shadow-md ${project ? 'justify-between' : 'justify-center md:justify-start'}`}>

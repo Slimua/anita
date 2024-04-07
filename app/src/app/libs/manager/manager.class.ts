@@ -27,7 +27,7 @@ export class Manager {
     return new ProjectLoader(projectId).loadProject()
   }
 
-  public static saveProject = (systemData: TSystemData, mode: EDITOR_MODE): Promise<TSystemData> => (
+  public static saveProject = (systemData: TSystemData, mode: EDITOR_MODE.add | EDITOR_MODE.edit): Promise<TSystemData> => (
     new ProjectSaver(systemData, mode).save()
   )
 

@@ -1,6 +1,6 @@
 import { ANITA_URLS, URL_PARAMS } from 'app/libs/routing/anita-routes.constant'
 import { IProjectSettings } from 'app/models/project/project.declarations'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { Loader } from 'app/components/shared-components/loader/loader.component'
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router'

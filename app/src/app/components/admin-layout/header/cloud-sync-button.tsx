@@ -5,7 +5,7 @@ import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { CloudSyncButtonOpenFilePicker } from 'app/components/admin-layout/header/cloud-sync-button-open-file-picker'
 import { CloudSyncButtonDoSync } from 'app/components/admin-layout/header/cloud-sync-button-do-sync'
 import { useMultiState } from 'app/components/hooks/multi-state.hook'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 
 interface ICloudSyncButtonProps {
   projectId: string
@@ -32,17 +32,17 @@ export const CloudSyncButton: React.FC<ICloudSyncButtonProps> = memo(function Cl
         return
       }
       if (!isAuthenticated) {
-        currentProject?.syncInfo.setCloudSyncState(CloudSyncState.NOT_CONNECTED)
+        currentProject?.dropBoxSyncInfo.setCloudSyncState(CloudSyncState.NOT_CONNECTED)
         return setState({ cloudSyncState: CloudSyncState.NOT_CONNECTED })
       }
       const linkedFileId = await DropboxHelper.instance.getLinkedFileIdOrNull(projectId)
       if (!linkedFileId) {
-        currentProject?.syncInfo.setCloudSyncState(CloudSyncState.NOT_LINKED)
+        currentProject?.dropBoxSyncInfo.setCloudSyncState(CloudSyncState.NOT_LINKED)
         return setState({ cloudSyncState: CloudSyncState.NOT_LINKED })
       }
 
-      currentProject?.syncInfo.setCloudSyncState(CloudSyncState.LINKED)
-      currentProject?.syncInfo.setLinkedFileId(linkedFileId)
+      currentProject?.dropBoxSyncInfo.setCloudSyncState(CloudSyncState.LINKED)
+      currentProject?.dropBoxSyncInfo.setLinkedFileId(linkedFileId)
       setState({ cloudSyncState: CloudSyncState.LINKED, linkedFileId })
     }
 
@@ -50,8 +50,8 @@ export const CloudSyncButton: React.FC<ICloudSyncButtonProps> = memo(function Cl
 
     return () => {
       const currentProject = Manager.getCurrentProject()
-      currentProject?.syncInfo.setCloudSyncState(CloudSyncState.NOT_CONNECTED)
-      currentProject?.syncInfo.setLinkedFileId(null)
+      currentProject?.dropBoxSyncInfo.setCloudSyncState(CloudSyncState.NOT_CONNECTED)
+      currentProject?.dropBoxSyncInfo.setLinkedFileId(null)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId])

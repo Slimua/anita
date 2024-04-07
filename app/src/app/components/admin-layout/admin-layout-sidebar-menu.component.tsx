@@ -2,7 +2,7 @@ import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { AdminLayoutSidebarProjectPicker } from 'app/components/admin-layout/admin-layout-sidebar-project-picker.component'
 import { useSelector } from 'react-redux'
 import React from 'react'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { AdminLayoutSidebarMenuItem } from 'app/components/admin-layout/admin-layout-sidebar-menu-item.component'
 
 interface IAdminLayoutSidebarMenuProps {

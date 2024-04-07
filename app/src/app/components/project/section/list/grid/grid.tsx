@@ -2,7 +2,7 @@ import React from 'react'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
 import { ProjectSectionListGridElement } from 'app/components/project/section/list/grid/grid-element'
 import { FORM_COMPONENTS_CODES } from 'app/components/shared-components/forms-automator/form-component-codes.enum'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 
 interface IProjectSectionListGridProps {
   sectionId: string

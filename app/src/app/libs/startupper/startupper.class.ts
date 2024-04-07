@@ -5,7 +5,7 @@ import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.
 import { DbConnector } from 'app/libs/db-connector/db-connector.class'
 import { INDEXEDDB_PLUGIN } from 'app/libs/db-connector/plugins/indexed-db/exporter.constant'
 import { Logger } from 'app/libs/logger/logger.class'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { ShortcutsListener } from 'app/libs/shortcuts/shortcuts-listener'
 import { DevTools } from 'app/libs/tools/dev-tools.class'
 import { appVersion } from 'app/version'

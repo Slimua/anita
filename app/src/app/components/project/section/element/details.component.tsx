@@ -1,7 +1,7 @@
 import { ANITA_URLS, URL_PARAMS } from 'app/libs/routing/anita-routes.constant'
 import { urlParamFiller } from 'app/libs/routing/url-param-fillers.function'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
 import { ProjectSectionElementDeleteButton } from 'app/components/project/section/element/delete-button.component'
 import { ProjectSectionElementDetailsParentsLinks } from 'app/components/project/section/element/details-parents-links.component'

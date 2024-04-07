@@ -4,7 +4,7 @@ import { ProjectSectionNoData } from 'app/components/project/section/no-data.com
 import { Loader } from 'app/components/shared-components/loader/loader.component'
 import React, { useEffect, useState } from 'react'
 import { Navigate, useParams } from 'react-router'
-import { Manager } from 'app/libs/manager/manager.class'
+import { Manager } from 'app/cross-refs-exports'
 import { SupportedViews } from 'app/models/section/view-settings.const'
 import { ProjectSectionListTabs } from 'app/components/project/section/list/tabs/list-tabs.component'
 import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
