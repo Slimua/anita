@@ -15,7 +15,6 @@ const onClick = () => {
 }
 
 export const OAuth: React.FC = () => {
-  const { showModal } = useModalContext()
   const data = OAuthUtils.parseQueryString()
   const navigate = useNavigate()
 
@@ -25,7 +24,7 @@ export const OAuth: React.FC = () => {
   const helper = React.useMemo(() => (service === SupportedCloud.WORDPRESS ? WordpressHelper.instance : DropboxHelper.instance), [service])
 
   React.useEffect(() => {
-    helper.getAccessTokenFromCode(code, showModal)
+    helper.getAccessTokenFromCode(code)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, helper])
 

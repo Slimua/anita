@@ -10,6 +10,7 @@ import { ShortcutsListener } from 'app/libs/shortcuts/shortcuts-listener'
 import { DevTools } from 'app/libs/tools/dev-tools.class'
 import { appVersion } from 'app/version'
 import React from 'react'
+import { Bucket } from 'app/state/bucket.state'
 
 export class Startupper {
   /**
@@ -44,6 +45,7 @@ export class Startupper {
    * Initializes cloud connectors
    */
   private initCloudConnectors (): void {
+    Bucket.createStore()
     DropboxHelper.init()
     WordpressHelper.init()
   }

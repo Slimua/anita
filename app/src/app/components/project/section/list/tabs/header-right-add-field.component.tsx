@@ -2,10 +2,10 @@ import { EDITOR_MODE } from 'app/components/editor-mode.enum'
 import { SectionFormModelManager } from 'app/components/projects/add-edit-project-components/section-form-model-manager.component'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Manager } from 'app/cross-refs-exports'
 import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
+import { ModalState } from 'app/state/modal.state'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -19,8 +19,6 @@ export const ListTabsHeaderRightAddField: React.FC<IListTabsHeaderRightAddFieldP
   const sections = project[RESERVED_AUDS_KEYS._sections]!
   const sectionIndex = sections?.findIndex((section) => section.id === props.sectionId)
 
-  const { hideModal } = useModalContext()
-
   if (!sections || sectionIndex === -1 || sectionIndex === undefined) {
     return null
   }
@@ -29,7 +27,7 @@ export const ListTabsHeaderRightAddField: React.FC<IListTabsHeaderRightAddFieldP
     const systemData = await Manager.saveProject(project as TSystemData, EDITOR_MODE.edit)
     await Manager.loadProjectsList()
     Manager.setCurrentProject(systemData)
-    hideModal()
+    ModalState.hideModal()
   }
 
   const lastSectionFormElementIndex = sections[sectionIndex].formModel.length - 1
@@ -47,7 +45,7 @@ export const ListTabsHeaderRightAddField: React.FC<IListTabsHeaderRightAddFieldP
           id="cancel"
           label="Cancel"
           type={Type.secondary}
-          onClick={hideModal}
+          onClick={ModalState.hideModal}
         />
         <Button
           id="action-button"

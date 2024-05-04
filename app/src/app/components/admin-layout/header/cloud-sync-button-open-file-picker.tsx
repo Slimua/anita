@@ -1,13 +1,12 @@
 import React from 'react'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { FILE_PICKER_MODAL_CONFIG } from 'app/components/admin-layout/header/cloud-sync-file-picker'
+import { ModalState } from 'app/state/modal.state'
 
 export const CloudSyncButtonOpenFilePicker: React.FC = () => {
-  const { showModal } = useModalContext()
   const handleOpenModalClick = async () => {
-    showModal(FILE_PICKER_MODAL_CONFIG)
+    ModalState.showModal(FILE_PICKER_MODAL_CONFIG)
   }
   return (
     <Button

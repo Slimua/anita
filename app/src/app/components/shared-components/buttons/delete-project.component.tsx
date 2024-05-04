@@ -6,16 +6,14 @@ import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
+import { ModalState } from 'app/state/modal.state'
 
 interface IDeleteProjectButtonProps {
   project: IProjectSettings
 }
 
 export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ project }) => {
-  const { showModal } = useModalContext()
-
   const navigate = useNavigate()
 
   const handleClickDelete = async () => {
@@ -29,7 +27,7 @@ export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ proje
   }
 
   const handleClickModal = () => {
-    showModal({
+    ModalState.showModal({
       title: 'Delete Project',
       actionText: 'Delete',
       type: Type.danger,

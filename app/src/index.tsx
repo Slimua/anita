@@ -6,7 +6,7 @@ import React from 'react'
 import { HashRouter as Router } from 'react-router-dom'
 import { Provider as StoreProvider } from 'react-redux'
 import './index.css'
-import { ModalProvider } from 'app/components/shared-components/modals/modal.component'
+import { ModalPortal } from 'app/components/shared-components/modals/modal.component'
 import * as ReactDOMClient from 'react-dom/client'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import 'tippy.js/dist/tippy.css'
@@ -17,11 +17,10 @@ const root = ReactDOMClient.createRoot(rootElement!)
 root.render(
   <React.StrictMode>
     <StoreProvider store={store}>
-      <ModalProvider>
-        <Router>
-          <AdminLayout />
-        </Router>
-      </ModalProvider>
+      <ModalPortal />
+      <Router>
+        <AdminLayout />
+      </Router>
     </StoreProvider>
   </React.StrictMode>
 )

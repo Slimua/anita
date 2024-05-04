@@ -3,10 +3,10 @@ import { urlParamFiller } from 'app/libs/routing/url-param-fillers.function'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import React from 'react'
 import { useNavigate } from 'react-router'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { Manager } from 'app/cross-refs-exports'
 import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
+import { ModalState } from 'app/state/modal.state'
 
 interface IProjectSectionElementDeleteButtonProps {
   projectId: string
@@ -15,8 +15,6 @@ interface IProjectSectionElementDeleteButtonProps {
 }
 
 export const ProjectSectionElementDeleteButton: React.FC<IProjectSectionElementDeleteButtonProps> = ({ projectId, sectionId, elementId }) => {
-  const { showModal } = useModalContext()
-
   const navigate = useNavigate()
 
   const handleClickDelete = () => {
@@ -25,7 +23,7 @@ export const ProjectSectionElementDeleteButton: React.FC<IProjectSectionElementD
   }
 
   const handleClickModal = () => {
-    showModal({
+    ModalState.showModal({
       title: 'Delete element',
       actionText: 'Delete',
       type: Type.danger,

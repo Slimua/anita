@@ -1,7 +1,7 @@
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { IModalProps } from 'app/components/shared-components/modals/modal.component'
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
+import { ModalState } from 'app/state/modal.state'
 
 /**
  * API reference: Anita Project Manager Wordpress plugin
@@ -27,7 +27,7 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async getAccessTokenFromCode (code: string, showModal: (modalProps: IModalProps) => void) {
+  public async getAccessTokenFromCode (code: string) {
     const unencodedData = atob(code)
     const authData: IWordPressAuthData = JSON.parse(unencodedData)
     if (authData.access_token && authData.refresh_token) {
@@ -41,7 +41,7 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
           const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
           this.saveRemoteInfo(remoteId, res.data)
         } else if (res?.statusText === 'Token tampered' || res?.statusText === 'Token expired') {
-          showModal({
+          ModalState.showModal({
             isOpen: true,
             title: 'Authentication error',
             hideCancelButton: true,

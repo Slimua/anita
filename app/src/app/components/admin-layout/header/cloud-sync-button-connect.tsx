@@ -4,16 +4,15 @@ import { Button } from 'app/components/shared-components/common-ui-eles/button.c
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { liveQuery, Subscription } from 'dexie'
 import { CloudSyncState, IDropboxTokens } from 'app/libs/cloud-sync/cloud-sync.const'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { FILE_PICKER_MODAL_CONFIG } from 'app/components/admin-layout/header/cloud-sync-file-picker'
 import { CloudSyncBase } from 'app/cross-refs-exports'
+import { ModalState } from 'app/state/modal.state'
 
 interface ICloudSyncButtonConnectProps {
   setCloudSyncState: (cloudSyncState: CloudSyncState) => void
 }
 
 export const CloudSyncButtonConnect: React.FC<ICloudSyncButtonConnectProps> = (props) => {
-  const { showModal } = useModalContext()
   const observerRef = useRef<Subscription | null>(null)
   const startObserver = () => {
     observerRef.current = liveQuery(() => CloudSyncBase.getDB().table('accounts').where({ service: 'dropbox' }).first())
@@ -21,7 +20,7 @@ export const CloudSyncButtonConnect: React.FC<ICloudSyncButtonConnectProps> = (p
         next: async (value: IDropboxTokens | undefined) => {
           if (value) {
             props.setCloudSyncState(CloudSyncState.NOT_LINKED)
-            showModal(FILE_PICKER_MODAL_CONFIG)
+            ModalState.showModal(FILE_PICKER_MODAL_CONFIG)
           }
         }
       })

@@ -1,45 +1,20 @@
-import React, { Fragment, ReactNode, useState } from 'react'
-import { Icons, TIconName } from 'app/libs/icons/icons.class'
+import React, { Fragment, ReactNode } from 'react'
+import { Icons } from 'app/libs/icons/icons.class'
 import ReactDOM from 'react-dom'
-import { ModalContext, useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { Dialog, Transition } from '@headlessui/react'
-import { Button, IButtonWithTooltipProps } from 'app/components/shared-components/common-ui-eles/button.component'
+import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-
-interface IModalPropsOpen {
-  isOpen?: true
-  title: string
-  actionText: string
-  type: Type.primary | Type.danger
-  children: ReactNode
-  icon?: TIconName
-  iconClassName?: string
-  disableAction?: boolean
-  hideCancelButton?: boolean
-  hideActionRow?: boolean
-  leftButton?: IButtonWithTooltipProps
-  handleClickAction?: () => void
-  handleClickCancel?: () => void
-  handleOnClose?: () => void
-}
-
-// When isOpen is false or not provided
-interface IModalPropsClosed {
-  isOpen: false
-}
-
-// Union type
-export type IModalProps = IModalPropsOpen | IModalPropsClosed;
+import { IModalProps, IModalPropsOpen, ModalState } from 'app/state/modal.state'
+import { useAtomValue } from 'jotai'
 
 const Modal: React.FC<IModalProps> = (props) => {
-  const { hideModal } = useModalContext()
   const handleActionClick = () => {
     (props as IModalPropsOpen).handleClickAction?.()
-    hideModal()
+    ModalState.hideModal()
   }
   const cancelAction = () => {
     (props as IModalPropsOpen).handleClickCancel?.()
-    hideModal()
+    ModalState.hideModal()
   }
   const onCloseAction = () => {
     (props as IModalPropsOpen).handleOnClose?.()
@@ -119,53 +94,12 @@ const Modal: React.FC<IModalProps> = (props) => {
   )
 }
 
-const ModalContainer: React.FC<IModalProps> = (props) => (
-  ReactDOM.createPortal(
-    <Modal {...props} />,
-    document.getElementById('modal-root')!
-  )
-)
-
-const DEFAULT_MODAL_STATE: IModalProps = {
-  type: Type.primary,
-  title: '',
-  actionText: '',
-  children: null,
-  icon: undefined,
-  leftButton: undefined,
-  iconClassName: undefined,
-  disableAction: undefined,
-  hideCancelButton: undefined,
-  hideActionRow: undefined,
-  handleClickAction: () => { },
-  handleClickCancel: () => { },
-  handleOnClose: () => {}
-}
-
-export const ModalProvider: React.FC<{children: React.ReactNode}> = (props) => {
-  const [state, setState] = useState<IModalProps>({ isOpen: false })
-  const showModal = React.useCallback((modalProps: IModalProps) => {
-    setState({
-      ...DEFAULT_MODAL_STATE,
-      ...modalProps,
-      isOpen: true
-    } as IModalPropsOpen)
-  }, [])
-
-  const hideModal = React.useCallback(() => {
-    setState({ isOpen: false })
-  }, [])
-
-  const updateModal = React.useCallback((newModalProps: Partial<IModalProps>) => {
-    setState({ ...newModalProps } as IModalPropsOpen | IModalPropsClosed)
-  }, [])
-
-  const value = React.useMemo(() => ({ modalProps: state, showModal, hideModal, updateModal }), [state, showModal, hideModal, updateModal])
-
+export const ModalPortal: React.FC = () => {
+  const modalConfig = useAtomValue(ModalState.atoms.modalProps)
   return (
-    <ModalContext.Provider value={value}>
-      <ModalContainer {...state} />
-      {props.children}
-    </ModalContext.Provider>
+    ReactDOM.createPortal(
+      <Modal {...modalConfig} />,
+      document.getElementById('modal-root')!
+    )
   )
 }

@@ -1,4 +1,3 @@
-import { IModalProps } from 'app/components/shared-components/modals/modal.component'
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { IDropboxTokens, ISharedFileMeta } from 'app/libs/cloud-sync/cloud-sync.const'
 import { IS_SYNCING } from 'app/libs/cloud-sync/sync-manager.const'
@@ -50,7 +49,7 @@ export class DropboxHelper extends CloudSyncBase<SupportedCloud.DROPBOX> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public async getAccessTokenFromCode (code: string, showModal: (modalProps: IModalProps) => void) {
+  public async getAccessTokenFromCode (code: string) {
     this.dbxAuth!.setCodeVerifier(window.sessionStorage.getItem('codeVerifier') as string)
     const response = await this.dbxAuth!.getAccessTokenFromCode(this.BASE_URL, code)
     if (response.result) {

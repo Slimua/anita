@@ -8,10 +8,10 @@ import { Button } from 'app/components/shared-components/common-ui-eles/button.c
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { ImportProjectModalContent } from 'app/components/projects/project-importer-components/import-project-modal-content.component'
 import { store } from 'app/libs/redux/state.store'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
+import { ModalState } from 'app/state/modal.state'
 
 interface IImportProjectButtonProps {
   btnType: 'icon' | 'text'
@@ -20,7 +20,6 @@ interface IImportProjectButtonProps {
 export const ImportProjectButton: React.FC<IImportProjectButtonProps> = (props) => {
   const navigate = useNavigate()
   const validObj = useSelector((state: AnitaStore) => state.formElesValidState)
-  const { showModal } = useModalContext()
   const projectData = useRef<TAnitaUniversalDataStorage>()
   const projectFileHandle = useRef<FileSystemFileHandle>()
 
@@ -42,7 +41,7 @@ export const ImportProjectButton: React.FC<IImportProjectButtonProps> = (props) 
     projectData.current = project
     projectFileHandle.current = fileHandle
 
-    showModal({
+    ModalState.showModal({
       title: 'Import project',
       actionText: 'Import',
       type: Type.primary,

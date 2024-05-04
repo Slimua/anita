@@ -1,9 +1,8 @@
 import { ListTabsHeaderRightEditViewTable } from 'app/components/project/section/list/tabs/header-right-edit-view-table.component'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
-import { IModalProps } from 'app/components/shared-components/modals/modal.component'
 import { SupportedViews } from 'app/models/section/view-settings.const'
+import { IModalProps, ModalState } from 'app/state/modal.state'
 import React from 'react'
 
 interface IListTabsHeaderRightEditViewProps {
@@ -28,9 +27,8 @@ export const ListTabsHeaderRightEditView: React.FC<IListTabsHeaderRightEditViewP
       children: <><ListTabsHeaderRightEditViewTable sectionId={props.sectionId} /></>
     }
   }
-  const { showModal } = useModalContext()
   const handleOpenConfigForView = () => {
-    showModal(modalConfigsByView[props.activeTab])
+    ModalState.showModal(modalConfigsByView[props.activeTab])
   }
   return (
     <>
