@@ -1,7 +1,7 @@
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { IDropboxTokens, ISharedFileMeta } from 'app/libs/cloud-sync/cloud-sync.const'
-import { IS_SYNCING } from 'app/libs/cloud-sync/sync-manager.const'
 import { TAnitaUniversalDataStorage } from 'app/models/project/project.declarations'
+import { SyncState } from 'app/state/sync.state'
 import { Dropbox, DropboxAuth, DropboxResponse, files } from 'dropbox'
 
 /**
@@ -135,7 +135,7 @@ export class DropboxHelper extends CloudSyncBase<SupportedCloud.DROPBOX> {
   }
 
   public async shouldSync (fileId: string): Promise<boolean> {
-    const isCurrentlySyncing: boolean = IS_SYNCING.getValue()
+    const isCurrentlySyncing: boolean = SyncState.getIsSyncing()
     if (isCurrentlySyncing) {
       return false
     }

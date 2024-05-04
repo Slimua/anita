@@ -1,25 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { LAST_SYNCED_ID } from 'app/libs/cloud-sync/sync-manager.const'
-import { Subscription } from 'rxjs'
+import React, { useEffect, useState } from 'react'
+import { useAtomValue } from 'jotai'
+import { SyncState } from 'app/state/sync.state'
 
 export const useIdLastChangedBySync = (lastChangedId: string | undefined) => {
-  const subscriotionRef = useRef<Subscription>()
   const [lastChangedAt, setLastChangedAt] = useState(Date.now())
+  const lastSyncedId = useAtomValue(SyncState.atoms.lastSyncedId)
 
   useEffect(() => {
-    const updateLastChangedAt = (newValue: string | null) => {
-      if (newValue === lastChangedId) {
-        setLastChangedAt(Date.now())
-      }
+    if (lastSyncedId === lastChangedId) {
+      setLastChangedAt(Date.now())
     }
-    if (subscriotionRef.current) {
-      subscriotionRef.current.unsubscribe()
-    }
-    subscriotionRef.current = LAST_SYNCED_ID.subscribe(updateLastChangedAt)
-    return () => {
-      subscriotionRef.current?.unsubscribe()
-    }
-  }, [lastChangedId])
+  }, [lastChangedId, lastSyncedId])
 
   return lastChangedAt
 }

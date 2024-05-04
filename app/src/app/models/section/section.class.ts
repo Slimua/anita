@@ -12,10 +12,11 @@ import { SupportedViews } from 'app/models/section/view-settings.const'
 import { RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
-import { Subject } from 'rxjs'
-import { IS_SAVING_IN_FS } from 'app/libs/cloud-sync/sync-manager.const'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import { SyncManager } from 'app/cross-refs-exports'
+import { SyncState } from 'app/state/sync.state'
+import { atom } from 'jotai'
+import { Bucket } from 'app/state/bucket.state'
 
 export class Section implements ISection {
   public id: string
@@ -25,8 +26,8 @@ export class Section implements ISection {
   public createdAt: string
   public updatedAt?: string
   public formModel: Array<FormFieldsModel<TSupportedFormsTypes>>
-  public visibleColumnsInTableView = new Subject<Array<FormFieldsModel<TSupportedFormsTypes>>>()
-  public sorting = new Subject<[string, 'asc' | 'desc'] | [null, null]>()
+  public visibleColumnsInTableView = atom<Array<FormFieldsModel<TSupportedFormsTypes>>>([])
+  public sorting = atom<[string, 'asc' | 'desc'] | [null, null]>([null, null])
 
   constructor (
     private projectId: string,
@@ -38,8 +39,8 @@ export class Section implements ISection {
     this.icon = sectionData.icon || undefined
     this.childOf = sectionData.childOf
     this.formModel = sectionData.formModel
-    this.visibleColumnsInTableView.next(this.getVisibleColumnsInTableView())
-    this.sorting.next(this.getSorting())
+    Bucket.state.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
+    Bucket.state.set(this.sorting, this.getSorting())
     this.createdAt = sectionData[RESERVED_FIELDS.createdAt] || DateTools.getUtcIsoString()
     this.updatedAt = sectionData[RESERVED_FIELDS.updatedAt]
   }
@@ -53,7 +54,7 @@ export class Section implements ISection {
   public getElementById = (id: string): Promise<ISectionElement | void> => dbInstances[this.projectId].callSelector<ISectionElement>(this.id, { [RESERVED_FIELDS.id]: id }).single()
 
   public saveElement = async (element: ISectionElement, forceMode?: EDITOR_MODE.add | EDITOR_MODE.edit): Promise<ISectionElement> => {
-    IS_SAVING_IN_FS.next(true)
+    SyncState.setIsSavingInFs(true)
     const mode = forceMode || (element.id ? EDITOR_MODE.edit : EDITOR_MODE.add)
     const savedElement = await new SectionElementSaver(this.projectId, this.id, element, mode).save()
     SyncManager.syncWithRemoteOrLocal({ mode, type: 'element', projectId: this.projectId, sectionId: this.id, elementId: savedElement.id!, elementData: savedElement })
@@ -61,7 +62,7 @@ export class Section implements ISection {
   }
 
   public deleteElement = async (element: ISectionElement): Promise<void> => {
-    IS_SAVING_IN_FS.next(true)
+    SyncState.setIsSavingInFs(true)
     await dbInstances[this.projectId].callDeletor(this.id, { id: element.id }).autoDelete()
     SyncManager.syncWithRemoteOrLocal({ mode: EDITOR_MODE.delete, type: 'element', projectId: this.projectId, sectionId: this.id, elementId: element.id! })
   }
@@ -113,7 +114,7 @@ export class Section implements ISection {
       this.sectionData.viewSettings.table.formElesVisibility = {}
     }
     this.sectionData.viewSettings.table.formElesVisibility[formEleFieldName!] = isVisible
-    this.visibleColumnsInTableView.next(this.getVisibleColumnsInTableView())
+    Bucket.state.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
     this.saveEditedSection()
   }
 
@@ -137,7 +138,7 @@ export class Section implements ISection {
     const newSorting: [string, 'asc' | 'desc'] = [sorting, order]
     this.sectionData.viewSettings.table.sorting = newSorting
 
-    this.sorting.next(newSorting)
+    Bucket.state.set(this.sorting, newSorting)
     this.saveEditedSection()
   }
 

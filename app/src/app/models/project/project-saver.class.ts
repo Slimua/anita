@@ -7,8 +7,8 @@ import { DateTools } from 'app/libs/tools/date-tools.class'
 import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { CLIENT_SECTIONS } from 'app/data/system-local-db/client-sections.enum'
-import { IS_SAVING_IN_FS } from 'app/libs/cloud-sync/sync-manager.const'
 import { ISyncWithRemoteOrLocalAddProjectProps, ISyncWithRemoteOrLocalEditProjectProps, SyncManager } from 'app/cross-refs-exports'
+import { SyncState } from 'app/state/sync.state'
 
 export class ProjectSaver {
   private localStorage: LOCAL_STORAGE_SYSTEMS | undefined
@@ -22,12 +22,12 @@ export class ProjectSaver {
   ) { }
 
   public async save (): Promise<TSystemData> {
-    IS_SAVING_IN_FS.next(true)
+    SyncState.setIsSavingInFs(true)
 
     if (this.mode === EDITOR_MODE.edit) {
-      this.setupdatedAt()
+      this.setUpdatedAt()
     } else {
-      this.setcreatedAt()
+      this.setCreatedAt()
     }
 
     await this.checkIfLocalStorageIsSetOrGetIt()
@@ -51,14 +51,14 @@ export class ProjectSaver {
     return this.project
   }
 
-  private setcreatedAt (): void {
+  private setCreatedAt (): void {
     this.project[RESERVED_AUDS_KEYS._settings][0][RESERVED_FIELDS.createdAt] = DateTools.getUtcIsoString()
     this.project[RESERVED_AUDS_KEYS._sections].forEach((section) => {
       section[RESERVED_FIELDS.createdAt] = DateTools.getUtcIsoString()
     })
   }
 
-  private setupdatedAt (): void {
+  private setUpdatedAt (): void {
     this.project[RESERVED_AUDS_KEYS._settings][0][RESERVED_FIELDS.updatedAt] = DateTools.getUtcIsoString()
     this.project[RESERVED_AUDS_KEYS._sections].forEach((section) => {
       section[RESERVED_FIELDS.updatedAt] = DateTools.getUtcIsoString()

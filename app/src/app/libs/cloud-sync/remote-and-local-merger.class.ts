@@ -4,7 +4,7 @@ import { CloudSyncBase, Manager } from 'app/cross-refs-exports'
 import { Project } from 'app/models/project/project.class'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
-import { IS_SYNCING, LAST_SYNCED_ID } from 'app/libs/cloud-sync/sync-manager.const'
+import { SyncState } from 'app/state/sync.state'
 
 export class RemoteAndLocalMerger {
   private project: Project
@@ -12,17 +12,17 @@ export class RemoteAndLocalMerger {
 
   constructor (private remoteId: string) {
     this.project = Manager.getCurrentProject()!
-    IS_SYNCING.next(false)
+    SyncState.setIsSyncing(false)
   }
 
   public async sync (): Promise<void> {
     this.setWorker()
-    IS_SYNCING.next(true)
+    SyncState.setIsSyncing(true)
     const lastSync = await this.getLastSync()
     const localData = await this.getLocalData()
     const remoteData = await this.getRemoteData()
     if (!remoteData) {
-      IS_SYNCING.next(false)
+      SyncState.setIsSyncing(false)
       return
     }
     this.sendToWorkerForComparison(lastSync, localData, remoteData)
@@ -62,7 +62,7 @@ export class RemoteAndLocalMerger {
       await this.saveLocalChanges(comparisonResult)
     }
     await this.sendToRemote(comparisonResult)
-    IS_SYNCING.next(false)
+    SyncState.setIsSyncing(false)
   }
 
   private async saveLocalChanges (comparisonResult: IComparisonResult): Promise<void> {
@@ -81,9 +81,9 @@ export class RemoteAndLocalMerger {
         [RESERVED_AUDS_KEYS._sections]: comparisonResult.localData[RESERVED_AUDS_KEYS._sections]
       }
       await this.project.updateSystemData(newSystemData)
-      LAST_SYNCED_ID.next(newSystemData[RESERVED_AUDS_KEYS._settings][0].id)
+      SyncState.setLastSyncedId(newSystemData[RESERVED_AUDS_KEYS._settings][0].id)
       Object.keys(newSystemData[RESERVED_AUDS_KEYS._sections]).forEach((sectionId) => {
-        LAST_SYNCED_ID.next(sectionId)
+        SyncState.setLastSyncedId(sectionId)
       })
     }
     for (const action in comparisonResult.local) {
@@ -121,10 +121,10 @@ export class RemoteAndLocalMerger {
           await sectionObject.deleteElement(element)
         }
         if (elementId) {
-          LAST_SYNCED_ID.next(elementId)
+          SyncState.setLastSyncedId(elementId)
         }
       }
-      LAST_SYNCED_ID.next(sectionId)
+      SyncState.setLastSyncedId(sectionId)
     }
   }
 

@@ -1,7 +1,8 @@
 import { ProjectSectionListTable } from 'app/components/project/section/list/table/table.component'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
 import { Section } from 'app/models/section/section.class'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useAtomValue } from 'jotai'
+import React, { useCallback } from 'react'
 
 interface IProjectSectionListTableProps {
   section: Section
@@ -32,21 +33,8 @@ const sortViewData = (sectionData: Array<ISectionElement>, field: string, order:
 )
 
 export const ProjectSectionListTableContainer: React.FC<IProjectSectionListTableProps> = (props) => {
-  const setRefresh = useState<number>(0)[1]
-  useEffect(() => {
-    const refreshVisibleColumns = () => {
-      setRefresh(Date.now())
-    }
-    const subscriptionVisibleCols = props.section.visibleColumnsInTableView.subscribe(refreshVisibleColumns)
-    const subscriptionSorting = props.section.sorting.subscribe(refreshVisibleColumns)
-    return () => {
-      subscriptionVisibleCols.unsubscribe()
-      subscriptionSorting.unsubscribe()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.section])
-
-  const [field, order] = props.section.getSorting()
+  const [field, order] = useAtomValue(props.section.sorting)
+  useAtomValue(props.section.visibleColumnsInTableView)
 
   const sortedData = useCallback(() => field === null
     ? props.sectionData

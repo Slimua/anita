@@ -1,21 +1,11 @@
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { IS_SAVING_IN_FS } from 'app/libs/cloud-sync/sync-manager.const'
-import React, { useEffect } from 'react'
+import { SyncState } from 'app/state/sync.state'
+import { useAtomValue } from 'jotai'
+import React from 'react'
 
 export const LocalFsInfo: React.FC = () => {
-  const [isSavingInFs, setIsSavingInFs] = React.useState(false)
-
-  useEffect(() => {
-    const updateIsSaving = (newValue: boolean) => {
-      setIsSavingInFs(newValue)
-    }
-    const isSavingSubscription = IS_SAVING_IN_FS.subscribe(updateIsSaving)
-    return () => {
-      isSavingSubscription.unsubscribe()
-    }
-  }, [])
-
+  const isSavingInFs = useAtomValue(SyncState.atoms.isSavingInFs)
   return (
     <Button
       id="local-fs-info"

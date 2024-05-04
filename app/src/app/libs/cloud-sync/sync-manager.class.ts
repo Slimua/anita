@@ -4,10 +4,10 @@ import { Manager } from 'app/cross-refs-exports'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { CloudSyncState } from 'app/libs/cloud-sync/cloud-sync.const'
 import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merger.class'
-import { IS_SAVING_IN_FS, IS_SYNCING } from 'app/libs/cloud-sync/sync-manager.const'
 import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 import { IProjectSettings, RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
+import { SyncState } from 'app/state/sync.state'
 
 export interface ISyncWithRemoteOrLocalAddProjectProps {
   mode: EDITOR_MODE.add
@@ -58,7 +58,7 @@ export class SyncManager {
     if (remoteStorageId) {
       this.handleWPSync(props, remoteStorageId)
     }
-    IS_SAVING_IN_FS.next(false)
+    SyncState.setIsSavingInFs(false)
   }
 
   private static getRemoteStorageId = (props: ISyncWithRemoteOrLocalProps): string | undefined => {
@@ -119,7 +119,7 @@ export class SyncManager {
   }
 
   private static canStartSyncWithRemote = (): boolean => (
-    !IS_SYNCING.getValue() &&
+    !SyncState.getIsSyncing() &&
     Manager.getCurrentProject()?.dropBoxSyncInfo.getCloudSyncState() === CloudSyncState.LINKED &&
     !!Manager.getCurrentProject()?.dropBoxSyncInfo.getLinkedFileId()
   )
