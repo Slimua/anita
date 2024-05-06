@@ -34,10 +34,10 @@ export const CloudSyncButtonConnect: React.FC<ICloudSyncButtonConnectProps> = (p
   return (
     <Button
       id="cloud-sync-connect"
-      label="Login with Dropbox"
-      tooltip="Sync your project across devices with Dropbox"
+      tooltip="Login with Dropbox to Sync your project across devices"
+      tooltipContainerClassName="w-48"
+      hasTooltip={true}
       type={Type.transparent}
-      breakpoint="md"
       iconLeft="logoDropbox"
       onClick={handleConnectClick}
     />

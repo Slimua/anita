@@ -14,7 +14,7 @@ const sizeClasses = {
 
 export interface IButtonWithTooltipProps {
   id: string
-  label: string
+  label?: string
   iconLeft?: TIconName
   iconRight?: TIconName
   iconLeftClassName?: string
@@ -70,7 +70,9 @@ export const Button: React.FC<IButtonWithTooltipProps> = (props) => {
   }
 
   const tooltipContent = props.hasTooltip || props.tooltip ? props.tooltip || props.label : undefined
+  console.log('tooltipContent:', tooltipContent)
   const additionalTooltipClass = props.breakpoint ? TooltipBreakpoints[props.breakpoint] : props.tooltipContainerClassName || ''
+  console.log('additionalTooltipClass:', additionalTooltipClass)
 
   useTippyTooltip(props.id, tooltipContent, additionalTooltipClass)
 
@@ -84,7 +86,7 @@ export const Button: React.FC<IButtonWithTooltipProps> = (props) => {
       disabled={props.disabled ?? false}
     >
       {!!props.iconLeft && Icons.render(props.iconLeft, props.iconLeftClassName)}
-      <span className={`${props.iconLeft ? 'ml-2' : ''} ${collapsable ? 'hidden' : ''} ${props.breakpoint ? LabelBreakpoints[props.breakpoint] : ''} ${props.labelClassName ?? ''}`}>{props.label}</span>
+      {!!props.label && <span className={`${props.iconLeft ? 'ml-2' : ''} ${collapsable ? 'hidden' : ''} ${props.breakpoint ? LabelBreakpoints[props.breakpoint] : ''} ${props.labelClassName ?? ''}`}>{props.label}</span>}
       {!!props.iconRight && Icons.render(props.iconRight, `ml-2 ${props.iconRightClassName || ''}`)}
     </Component>
   )
