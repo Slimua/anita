@@ -1,7 +1,7 @@
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { IDropboxTokens, ISharedFileMeta } from 'app/libs/cloud-sync/cloud-sync.const'
 import { TAnitaUniversalDataStorage } from 'app/models/project/project.declarations'
-import { SyncState } from 'app/state/sync.state'
+import { SyncState } from 'app/state/sync/sync-state.class'
 import { Dropbox, DropboxAuth, DropboxResponse, files } from 'dropbox'
 
 /**

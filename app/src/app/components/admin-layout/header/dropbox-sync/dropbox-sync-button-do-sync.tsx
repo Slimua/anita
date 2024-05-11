@@ -5,14 +5,14 @@ import { useShortcut } from 'app/components/hooks/shortcut'
 import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merger.class'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { useAtomValue } from 'jotai'
-import { SyncState } from 'app/state/sync.state'
+import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
 
-interface ICloudSyncButtonDoSyncProps {
+interface IDropboxSyncButtonDoSyncProps {
   linkedFileId: string
 }
 
-export const CloudSyncButtonDoSync: React.FC<ICloudSyncButtonDoSyncProps> = memo(function CloudSyncButtonDoSync (props: ICloudSyncButtonDoSyncProps) {
-  const isSyncing = useAtomValue(SyncState.atoms.isSyncing)
+export const DropboxSyncButtonDoSync: React.FC<IDropboxSyncButtonDoSyncProps> = memo(function DropboxSyncButtonDoSync (props: IDropboxSyncButtonDoSyncProps) {
+  const isSyncing = useAtomValue(SyncStateAtoms.isSyncing)
   const handleSyncClick = async (e: KeyboardEvent | React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()

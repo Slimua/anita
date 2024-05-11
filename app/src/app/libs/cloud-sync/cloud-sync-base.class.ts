@@ -2,8 +2,8 @@ import { Manager } from 'app/cross-refs-exports'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import Dexie from 'dexie'
 import { IWordPressAuthData } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
-import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
-import { IDropboxTokens } from './cloud-sync.const'
+import { IWordPressRemoteInfo, IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { CloudSyncTable, IDropboxTokens } from './cloud-sync.const'
 
 const DB_VERSION = 6
 
@@ -24,13 +24,6 @@ type TDataForTable<T extends SupportedCloud> = T extends SupportedCloud.DROPBOX 
 
 type TAccountsTable<T extends SupportedCloud> = T extends SupportedCloud.DROPBOX ? IAccountsTableForDropbox : IAccountsTableForWordpress
 
-enum CloudSyncTable {
-  ACCOUNTS = 'accounts',
-  SYNC_INFO = 'syncInfo',
-  FILES_INFO = 'filesInfo',
-  REMOTES_INFO = 'remotesInfo'
-}
-
 interface ICloudSyncDB<T extends SupportedCloud> {
   [CloudSyncTable.ACCOUNTS]: TAccountsTable<T>
   [CloudSyncTable.SYNC_INFO]: {
@@ -41,10 +34,7 @@ interface ICloudSyncDB<T extends SupportedCloud> {
     projectId: string
     fileId: string
   }
-  [CloudSyncTable.REMOTES_INFO]: {
-    remoteId: string
-    data: IWordPressSpaceInfo
-  }
+  [CloudSyncTable.REMOTES_INFO]: IWordPressRemoteInfo
 }
 
 export class CloudSyncBase<T extends SupportedCloud> {

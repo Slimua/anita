@@ -4,7 +4,7 @@ import { CloudSyncBase, Manager } from 'app/cross-refs-exports'
 import { Project } from 'app/models/project/project.class'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
-import { SyncState } from 'app/state/sync.state'
+import { SyncState } from 'app/state/sync/sync-state.class'
 
 export class RemoteAndLocalMerger {
   private project: Project

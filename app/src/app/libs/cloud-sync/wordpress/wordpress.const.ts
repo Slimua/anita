@@ -19,4 +19,10 @@ export interface IWordPressSpaceInfo {
   site_name: string
   site_url: string
   user_role: string
+  icon_base_64: string
+}
+
+export interface IWordPressRemoteInfo {
+  remoteId: string
+  data: IWordPressSpaceInfo
 }

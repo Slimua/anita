@@ -14,7 +14,7 @@ import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
 import { DateTools } from 'app/libs/tools/date-tools.class'
 import { SyncManager } from 'app/cross-refs-exports'
-import { SyncState } from 'app/state/sync.state'
+import { SyncState } from 'app/state/sync/sync-state.class'
 import { atom } from 'jotai'
 import { Bucket } from 'app/state/bucket.state'
 
@@ -39,8 +39,8 @@ export class Section implements ISection {
     this.icon = sectionData.icon || undefined
     this.childOf = sectionData.childOf
     this.formModel = sectionData.formModel
-    Bucket.state.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
-    Bucket.state.set(this.sorting, this.getSorting())
+    Bucket.general.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
+    Bucket.general.set(this.sorting, this.getSorting())
     this.createdAt = sectionData[RESERVED_FIELDS.createdAt] || DateTools.getUtcIsoString()
     this.updatedAt = sectionData[RESERVED_FIELDS.updatedAt]
   }
@@ -114,7 +114,7 @@ export class Section implements ISection {
       this.sectionData.viewSettings.table.formElesVisibility = {}
     }
     this.sectionData.viewSettings.table.formElesVisibility[formEleFieldName!] = isVisible
-    Bucket.state.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
+    Bucket.general.set(this.visibleColumnsInTableView, this.getVisibleColumnsInTableView())
     this.saveEditedSection()
   }
 
@@ -138,7 +138,7 @@ export class Section implements ISection {
     const newSorting: [string, 'asc' | 'desc'] = [sorting, order]
     this.sectionData.viewSettings.table.sorting = newSorting
 
-    Bucket.state.set(this.sorting, newSorting)
+    Bucket.general.set(this.sorting, newSorting)
     this.saveEditedSection()
   }
 

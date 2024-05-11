@@ -4,8 +4,9 @@ import ReactDOM from 'react-dom'
 import { Dialog, Transition } from '@headlessui/react'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { IModalProps, IModalPropsOpen, ModalState } from 'app/state/modal.state'
+import { IModalProps, IModalPropsOpen, ModalState } from 'app/state/modal/modal-state.class'
 import { useAtomValue } from 'jotai'
+import { ModalStateAtoms } from 'app/state/modal/modal-state.atoms'
 
 const Modal: React.FC<IModalProps> = (props) => {
   const handleActionClick = () => {
@@ -95,7 +96,7 @@ const Modal: React.FC<IModalProps> = (props) => {
 }
 
 export const ModalPortal: React.FC = () => {
-  const modalConfig = useAtomValue(ModalState.atoms.modalProps)
+  const modalConfig = useAtomValue(ModalStateAtoms.modalProps)
   return (
     ReactDOM.createPortal(
       <Modal {...modalConfig} />,

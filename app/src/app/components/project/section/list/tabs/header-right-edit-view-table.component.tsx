@@ -6,7 +6,7 @@ import React from 'react'
 import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
 import { ListTabsHeaderRightAddField } from 'app/components/project/section/list/tabs/header-right-add-field.component'
-import { IModalProps, ModalState } from 'app/state/modal.state'
+import { IModalProps, ModalState } from 'app/state/modal/modal-state.class'
 
 interface IListTabsHeaderRightEditViewListProps {
   sectionId: string

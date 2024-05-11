@@ -1,4 +1,4 @@
-import { IModalProps } from 'app/state/modal.state'
+import { IModalProps } from 'app/state/modal/modal-state.class'
 import { createContext, useContext } from 'react'
 
 export interface TModalContext {

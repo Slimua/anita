@@ -7,9 +7,9 @@ import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { Manager } from 'app/cross-refs-exports'
 import { TextTools } from 'app/libs/tools/text-tools.class'
 import React, { useEffect, useRef } from 'react'
-import { IModalProps, ModalState } from 'app/state/modal.state'
+import { IModalProps, ModalState } from 'app/state/modal/modal-state.class'
 
-interface ICloudSyncFilePickerState {
+interface DropboxSyncFilePickerState {
   files: Array<ISharedFileMeta> | null
   selected: ISharedFileMeta | null
   currentFolder: ISharedFileMeta | null
@@ -22,8 +22,8 @@ const handleSaveHere = (path: string) => {
   // todo
 }
 
-const CloudSyncFilePicker: React.FC = () => {
-  const [state, setState, getState] = useMultiState<ICloudSyncFilePickerState>({
+const DropboxSyncFilePicker: React.FC = () => {
+  const [state, setState, getState] = useMultiState<DropboxSyncFilePickerState>({
     files: null,
     selected: null,
     currentFolder: null,
@@ -120,6 +120,6 @@ export const FILE_PICKER_MODAL_CONFIG: IModalProps = {
   type: Type.primary,
   handleClickAction: handleSaveHere.bind(null, '/'),
   children: (
-    <><CloudSyncFilePicker /></>
+    <><DropboxSyncFilePicker /></>
   )
 }

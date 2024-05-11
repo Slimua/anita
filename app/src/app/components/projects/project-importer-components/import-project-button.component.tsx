@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { ImportProjectModalContent } from 'app/components/projects/project-importer-components/import-project-modal-content.component'
 import { store } from 'app/libs/redux/state.store'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { ModalState } from 'app/state/modal.state'
+import { ModalState } from 'app/state/modal/modal-state.class'
 
 interface IImportProjectButtonProps {
   btnType: 'icon' | 'text'

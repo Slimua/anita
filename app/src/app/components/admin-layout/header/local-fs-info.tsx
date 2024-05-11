@@ -1,11 +1,11 @@
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { SyncState } from 'app/state/sync.state'
+import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
 import { useAtomValue } from 'jotai'
 import React from 'react'
 
 export const LocalFsInfo: React.FC = () => {
-  const isSavingInFs = useAtomValue(SyncState.atoms.isSavingInFs)
+  const isSavingInFs = useAtomValue(SyncStateAtoms.isSavingInFs)
   return (
     <Button
       id="local-fs-info"

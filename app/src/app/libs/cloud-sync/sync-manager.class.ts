@@ -7,7 +7,7 @@ import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merge
 import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 import { IProjectSettings, RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
-import { SyncState } from 'app/state/sync.state'
+import { SyncState } from 'app/state/sync/sync-state.class'
 
 export interface ISyncWithRemoteOrLocalAddProjectProps {
   mode: EDITOR_MODE.add

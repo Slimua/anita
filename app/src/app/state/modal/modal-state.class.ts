@@ -2,8 +2,8 @@ import { Bucket } from 'app/state/bucket.state'
 import { IButtonWithTooltipProps } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { TIconName } from 'app/libs/icons/icons.class'
-import { atom } from 'jotai'
 import { ReactNode } from 'react'
+import { ModalStateAtoms } from './modal-state.atoms'
 
 export interface IModalPropsOpen {
   isOpen?: true
@@ -29,25 +29,17 @@ export interface IModalPropsClosed {
 
 export type IModalProps = IModalPropsOpen | IModalPropsClosed
 
-class ModalStateAtoms {
-  public static modalProps = atom<IModalProps>({
-    isOpen: false
-  })
-}
-
 export class ModalState {
-  public static atoms = ModalStateAtoms
-
   public static showModal = (props: IModalProps) => {
-    Bucket.state.set(this.atoms.modalProps, { type: Type.primary, ...props, isOpen: true } as IModalPropsOpen)
+    Bucket.general.set(ModalStateAtoms.modalProps, { type: Type.primary, ...props, isOpen: true } as IModalPropsOpen)
   }
 
   public static updateModal = (props: Partial<IModalPropsOpen>) => {
-    const currentProps = Bucket.state.get(this.atoms.modalProps)
-    Bucket.state.set(this.atoms.modalProps, { ...currentProps, ...props } as IModalPropsOpen)
+    const currentProps = Bucket.general.get(ModalStateAtoms.modalProps)
+    Bucket.general.set(ModalStateAtoms.modalProps, { ...currentProps, ...props } as IModalPropsOpen)
   }
 
   public static hideModal = () => {
-    Bucket.state.set(this.atoms.modalProps, { isOpen: false })
+    Bucket.general.set(ModalStateAtoms.modalProps, { isOpen: false })
   }
 }

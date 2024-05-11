@@ -2,7 +2,7 @@ import { ListTabsHeaderRightEditViewTable } from 'app/components/project/section
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { SupportedViews } from 'app/models/section/view-settings.const'
-import { IModalProps, ModalState } from 'app/state/modal.state'
+import { IModalProps, ModalState } from 'app/state/modal/modal-state.class'
 import React from 'react'
 
 interface IListTabsHeaderRightEditViewProps {

@@ -21,3 +21,10 @@ export interface ISharedFileMeta {
   path: string | undefined
   id: string
 }
+
+export enum CloudSyncTable {
+  ACCOUNTS = 'accounts',
+  SYNC_INFO = 'syncInfo',
+  FILES_INFO = 'filesInfo',
+  REMOTES_INFO = 'remotesInfo'
+}

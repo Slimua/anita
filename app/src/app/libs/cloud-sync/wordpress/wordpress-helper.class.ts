@@ -1,7 +1,13 @@
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
+import { CloudSyncTable } from 'app/libs/cloud-sync/cloud-sync.const'
 import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
-import { ModalState } from 'app/state/modal.state'
+import { IWordPressRemoteInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { Bucket } from 'app/state/bucket.state'
+import { ModalState } from 'app/state/modal/modal-state.class'
+import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
+import { SyncState } from 'app/state/sync/sync-state.class'
+import { liveQuery } from 'dexie'
 
 /**
  * API reference: Anita Project Manager Wordpress plugin
@@ -24,9 +30,18 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
   constructor () {
     super(SupportedCloud.WORDPRESS)
     CloudSyncBase.initDB()
+    this.watchRemotesChanges()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private watchRemotesChanges = () => {
+    liveQuery(() => CloudSyncBase.getDB().table<IWordPressRemoteInfo>(CloudSyncTable.REMOTES_INFO).toArray())
+      .subscribe((remotes) => {
+        SyncState.setWordPressRemotes(remotes)
+        const remoteIds = remotes.map(remote => remote.remoteId)
+        Bucket.general.set(SyncStateAtoms.wordPressRemotesIds, remoteIds)
+      })
+  }
+
   public async getAccessTokenFromCode (code: string) {
     const unencodedData = atob(code)
     const authData: IWordPressAuthData = JSON.parse(unencodedData)

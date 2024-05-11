@@ -8,7 +8,7 @@ import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { CLIENT_SECTIONS } from 'app/data/system-local-db/client-sections.enum'
 import { ISyncWithRemoteOrLocalAddProjectProps, ISyncWithRemoteOrLocalEditProjectProps, SyncManager } from 'app/cross-refs-exports'
-import { SyncState } from 'app/state/sync.state'
+import { SyncState } from 'app/state/sync/sync-state.class'
 
 export class ProjectSaver {
   private localStorage: LOCAL_STORAGE_SYSTEMS | undefined

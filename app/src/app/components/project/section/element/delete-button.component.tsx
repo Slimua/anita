@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { Manager } from 'app/cross-refs-exports'
 import { RESERVED_FIELDS } from 'app/models/reserved-fields.constant'
-import { ModalState } from 'app/state/modal.state'
+import { ModalState } from 'app/state/modal/modal-state.class'
 
 interface IProjectSectionElementDeleteButtonProps {
   projectId: string

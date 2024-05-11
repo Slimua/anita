@@ -1,23 +1,23 @@
 import React, { memo, useCallback, useEffect } from 'react'
 import { CloudSyncState } from 'app/libs/cloud-sync/cloud-sync.const'
-import { CloudSyncButtonConnect } from 'app/components/admin-layout/header/cloud-sync-button-connect'
+import { DropboxSyncButtonConnect } from 'app/components/admin-layout/header/dropbox-sync/dropbox-sync-button-connect'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
-import { CloudSyncButtonOpenFilePicker } from 'app/components/admin-layout/header/cloud-sync-button-open-file-picker'
-import { CloudSyncButtonDoSync } from 'app/components/admin-layout/header/cloud-sync-button-do-sync'
+import { DropboxSyncButtonOpenFilePicker } from 'app/components/admin-layout/header/dropbox-sync/dropbox-sync-button-open-file-picker'
+import { DropboxSyncButtonDoSync } from 'app/components/admin-layout/header/dropbox-sync/dropbox-sync-button-do-sync'
 import { useMultiState } from 'app/components/hooks/multi-state.hook'
 import { Manager } from 'app/cross-refs-exports'
 
-interface ICloudSyncButtonProps {
+interface IDropboxSyncButtonProps {
   projectId: string
 }
 
-interface ICloudSyncButtonState {
+interface IDropboxSyncButtonState {
   cloudSyncState: CloudSyncState | null
   linkedFileId: string | null
 }
 
-export const CloudSyncButton: React.FC<ICloudSyncButtonProps> = memo(function CloudSyncButton (props: ICloudSyncButtonProps) {
-  const [state, setState] = useMultiState<ICloudSyncButtonState>({
+export const DropboxSyncButton: React.FC<IDropboxSyncButtonProps> = memo(function CloudSyncButton (props: IDropboxSyncButtonProps) {
+  const [state, setState] = useMultiState<IDropboxSyncButtonState>({
     cloudSyncState: null,
     linkedFileId: null
   })
@@ -67,13 +67,13 @@ export const CloudSyncButton: React.FC<ICloudSyncButtonProps> = memo(function Cl
 
   if (state.cloudSyncState === CloudSyncState.NOT_CONNECTED) {
     return (
-      <CloudSyncButtonConnect setCloudSyncState={setCloudSyncState} />
+      <DropboxSyncButtonConnect setCloudSyncState={setCloudSyncState} />
     )
   }
 
   if (state.cloudSyncState === CloudSyncState.NOT_LINKED) {
     return (
-      <CloudSyncButtonOpenFilePicker />
+      <DropboxSyncButtonOpenFilePicker />
     )
   }
 
@@ -82,6 +82,6 @@ export const CloudSyncButton: React.FC<ICloudSyncButtonProps> = memo(function Cl
   }
 
   return (
-    <CloudSyncButtonDoSync linkedFileId={state.linkedFileId} />
+    <DropboxSyncButtonDoSync linkedFileId={state.linkedFileId} />
   )
 })

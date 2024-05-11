@@ -5,7 +5,7 @@ import { Type } from 'app/components/shared-components/common-ui-eles/components
 import { Manager } from 'app/cross-refs-exports'
 import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
-import { ModalState } from 'app/state/modal.state'
+import { ModalState } from 'app/state/modal/modal-state.class'
 import React from 'react'
 import { useSelector } from 'react-redux'
 

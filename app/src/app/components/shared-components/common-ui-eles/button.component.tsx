@@ -70,9 +70,7 @@ export const Button: React.FC<IButtonWithTooltipProps> = (props) => {
   }
 
   const tooltipContent = props.hasTooltip || props.tooltip ? props.tooltip || props.label : undefined
-  console.log('tooltipContent:', tooltipContent)
   const additionalTooltipClass = props.breakpoint ? TooltipBreakpoints[props.breakpoint] : props.tooltipContainerClassName || ''
-  console.log('additionalTooltipClass:', additionalTooltipClass)
 
   useTippyTooltip(props.id, tooltipContent, additionalTooltipClass)
 
