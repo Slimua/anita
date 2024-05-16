@@ -15,7 +15,9 @@ export const AdminLayoutHeader: React.FC = () => {
   const sidebarHideClass = useSelector((store: AnitaStore) => store.layout.sidebar)
   const project = useSelector((store: AnitaStore) => store.project)
   const handleClickSidebar = () => {
-    storeDispatcher({ type: REDUX_ACTIONS.toggleSidebar })
+    if (project) {
+      storeDispatcher({ type: REDUX_ACTIONS.toggleSidebar })
+    }
   }
 
   const localStorage = project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.localStorage!
