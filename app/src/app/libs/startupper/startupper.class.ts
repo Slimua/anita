@@ -24,7 +24,7 @@ export class Startupper {
     this.setLoggerDebug()
     this.initCloudConnectors()
     ShortcutsListener.init()
-    ProjectsListState.watchProjectsList()
+    await ProjectsListState.watchProjectsList()
   }
 
   /**

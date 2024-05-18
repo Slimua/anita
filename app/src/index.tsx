@@ -11,18 +11,21 @@ import * as ReactDOMClient from 'react-dom/client'
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 import 'tippy.js/dist/tippy.css'
 
-new Startupper().init()
-const rootElement = document.getElementById('root')
-const root = ReactDOMClient.createRoot(rootElement!)
-root.render(
-  <React.StrictMode>
-    <StoreProvider store={store}>
-      <ModalPortal />
-      <Router>
-        <AdminLayout />
-      </Router>
-    </StoreProvider>
-  </React.StrictMode>
-)
+const start = async () => {
+  await new Startupper().init()
+  const rootElement = document.getElementById('root')
+  const root = ReactDOMClient.createRoot(rootElement!)
+  root.render(
+    <React.StrictMode>
+      <StoreProvider store={store}>
+        <ModalPortal />
+        <Router>
+          <AdminLayout />
+        </Router>
+      </StoreProvider>
+    </React.StrictMode>
+  )
+}
 
+start()
 serviceWorkerRegistration.register()

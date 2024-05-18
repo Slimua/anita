@@ -6,10 +6,14 @@ import { ProjectsListAtoms } from 'app/state/projects-list/projects-list.atoms'
 import { liveQuery } from 'dexie'
 
 export class ProjectsListState {
-  public static watchProjectsList = () => {
-    liveQuery(() => dbInstances.system.dbStore.db.table<LocalProjectSettings>(CLIENT_SECTIONS.projects).toArray())
-      .subscribe((projects) => {
-        Bucket.general.set(ProjectsListAtoms.projects, projects)
-      })
-  }
+  public static watchProjectsList = (): Promise<true> => (
+    new Promise((resolve) => {
+      const subscription = liveQuery(() => dbInstances.system.dbStore.db.table<LocalProjectSettings>(CLIENT_SECTIONS.projects).toArray())
+        .subscribe((projects) => {
+          Bucket.general.set(ProjectsListAtoms.projects, projects)
+          resolve(true)
+          subscription.unsubscribe() // Unsubscribe after the first value is returned
+        })
+    })
+  )
 }
