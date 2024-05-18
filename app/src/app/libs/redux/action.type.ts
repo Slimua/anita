@@ -1,5 +1,4 @@
 import {
-  LocalProjectSettings,
   IProjectSettings,
   TSystemData
 } from 'app/models/project/project.declarations'
@@ -23,8 +22,6 @@ interface ActionWithoutPayload {
 }
 
 interface ActionsPayloads {
-  [REDUX_ACTIONS.addProjectToList]: LocalProjectSettings
-  [REDUX_ACTIONS.setProjectList]: Array<LocalProjectSettings>
   [REDUX_ACTIONS.setCurrentProject]: TSystemData
   [REDUX_ACTIONS.addSectionForChildOfSelector]: SectionDetailsDeclaration
   [REDUX_ACTIONS.updateFormElement]: ISectionElement

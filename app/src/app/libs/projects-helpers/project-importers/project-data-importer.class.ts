@@ -1,11 +1,9 @@
 import { DbInitializer } from 'app/data/local-dbs/db-initializer.class'
 import { dbInstances } from 'app/data/local-dbs/db-instances.const'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
-import { AdditionalInfoForLocalStorage, TAnitaUniversalDataStorage, IProjectSettings, LocalProjectSettings, RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
+import { AdditionalInfoForLocalStorage, TAnitaUniversalDataStorage, LocalProjectSettings, RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { FileSystemFileHandle } from 'app/libs/db-connector/plugins/file-handles/helpers/file-system-access-api'
 import { SaveProjectSettingsInIndexedDB } from 'app/models/project/save-project-settings-in-indexed-db.class'
-import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
-import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 
 /**
  * Imports one project file, and then calls `SaveProjectSettingsInIndexedDB`.
@@ -34,7 +32,6 @@ export class ProjectDataImporter {
   public async import (): Promise<LocalProjectSettings> {
     await this.initializeDb()
     await this.setLocalProjectSettings()
-    this.dispatchProject(this.projectData[RESERVED_AUDS_KEYS._settings][0])
 
     // Relaxed equality check, because in the form the localStorage data is stored as a string
     // eslint-disable-next-line eqeqeq
@@ -61,12 +58,5 @@ export class ProjectDataImporter {
     for (const section in this.projectData) {
       await dbInstances[this.projectData[RESERVED_AUDS_KEYS._settings][0].id].callInsertor(section, this.projectData[section]).autoInsert()
     }
-  }
-
-  /**
-   * Dispatches the action to add the project to the list of projects
-   */
-  private dispatchProject (payload: IProjectSettings): void {
-    storeDispatcher({ type: REDUX_ACTIONS.addProjectToList, payload })
   }
 }

@@ -4,9 +4,6 @@
 export enum REDUX_ACTIONS {
   // LAYOUT
   toggleSidebar = 1,
-  // PROJECTS
-  addProjectToList,
-  setProjectList,
   // PROJECT
   setCurrentProject,
   resetCurrentProject,
