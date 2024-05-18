@@ -76,22 +76,12 @@ export class WordPressClient {
     }
   }
 
-  public async createProject (projectData: any): Promise<void> {
+  public async saveProject (projectData: any): Promise<void> {
     try {
-      const response = await this.axiosInstance.post('create-project', projectData)
-      console.log('Project created successfully:', response.data)
+      const response = await this.axiosInstance.post('save-project', projectData)
+      console.log('Project saved successfully:', response.data)
     } catch (error) {
-      console.error('Error creating project:', error)
-      throw error
-    }
-  }
-
-  public async editProject (projectData: any): Promise<void> {
-    try {
-      const response = await this.axiosInstance.patch('edit-project', projectData)
-      console.log('Project edited successfully:', response.data)
-    } catch (error) {
-      console.error('Error editing project:', error)
+      console.error('Error saving project:', error)
       throw error
     }
   }
@@ -106,42 +96,29 @@ export class WordPressClient {
     }
   }
 
-  public async addSectionElement (projectId: string, sectionId: string, elementId: string, elementData: any): Promise<void> {
+  public async saveSectionElement (projectId: string, sectionId: string, elementId: string, elementData: any): Promise<void> {
     try {
-      const response = await this.axiosInstance.put('add-section-element', {
+      const response = await this.axiosInstance.post('save-section-element', {
         projectId,
         sectionId,
         elementId,
         element: elementData
       })
-      console.log('Section element added successfully:', response.data)
+      console.log('Section element saved successfully:', response.data)
     } catch (error) {
-      console.error('Error adding section element:', error)
-      throw error
-    }
-  }
-
-  public async editSectionElement (projectId: string, sectionId: string, elementId: string, elementData: any): Promise<void> {
-    try {
-      const response = await this.axiosInstance.patch('edit-section-element', {
-        projectId,
-        sectionId,
-        elementId,
-        element: elementData
-      })
-      console.log('Section element edited successfully:', response.data)
-    } catch (error) {
-      console.error('Error editing section element:', error)
+      console.error('Error saving section element:', error)
       throw error
     }
   }
 
   public async deleteSectionElement (projectId: string, sectionId: string, elementId: string): Promise<void> {
     try {
-      const response = await this.axiosInstance.post('delete-section-element', {
-        projectId,
-        sectionId,
-        elementId
+      const response = await this.axiosInstance.delete('delete-section-element', {
+        data: {
+          projectId,
+          sectionId,
+          elementId
+        }
       })
       console.log('Section element deleted successfully:', response.data)
     } catch (error) {
