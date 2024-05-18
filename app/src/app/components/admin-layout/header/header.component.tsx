@@ -10,7 +10,6 @@ import { RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { LocalFsInfo } from 'app/components/admin-layout/header/local-fs-info'
 import { Manager } from 'app/cross-refs-exports'
-import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 import { WordPressSyncButtons } from 'app/components/admin-layout/header/wordpress-sync/wordpress-sync-buttons'
 import { useAtomValue } from 'jotai'
 import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
@@ -31,11 +30,6 @@ export const AdminLayoutHeader: React.FC = () => {
       Manager.getCurrentProject()?.dropBoxSyncInfo.setLocalStorage(localStorage)
     }
   }, [localStorage])
-
-  useEffect(() => {
-    // TEST TO FETCH PROJECTS
-    WordpressHelper.instance.fetchAllRemotes()
-  }, [])
 
   const headerElementsNumber = Number(!!project) + Number(!!remoteIdsLength) + Number(!!project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id)
 

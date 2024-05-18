@@ -23,7 +23,7 @@ export const WordPressSyncButton: React.FC<IWordPressSyncButtonProps> = (props) 
 
   return (
     <>
-      {remoteInfo.data.icon_base_64 && (
+      {!remoteInfo.data.icon_base_64 && (
         <button
           className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-300 text-white font-bold text-xs border-none"
           aria-label="WordPress Sync"

@@ -6,6 +6,7 @@ import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merge
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { useAtomValue } from 'jotai'
 import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
+import { SupportedCloud } from 'app/cross-refs-exports'
 
 interface IDropboxSyncButtonDoSyncProps {
   linkedFileId: string
@@ -16,14 +17,14 @@ export const DropboxSyncButtonDoSync: React.FC<IDropboxSyncButtonDoSyncProps> = 
   const handleSyncClick = async (e: KeyboardEvent | React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    new RemoteAndLocalMerger(props.linkedFileId).sync()
+    new RemoteAndLocalMerger(props.linkedFileId, SupportedCloud.DROPBOX).sync()
   }
 
   useEffect(() => {
     const checkIfShouldSync = async () => {
       const shouldSync = await DropboxHelper.instance.shouldSync(props.linkedFileId)
       if (shouldSync) {
-        new RemoteAndLocalMerger(props.linkedFileId).sync()
+        new RemoteAndLocalMerger(props.linkedFileId, SupportedCloud.DROPBOX).sync()
       }
     }
     checkIfShouldSync()

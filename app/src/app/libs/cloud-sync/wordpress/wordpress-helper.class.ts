@@ -75,25 +75,17 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
   public async getClient (remoteId: string): Promise<WordPressClient | undefined> {
     const authData = await this.getDataForService(remoteId)
     if (!authData) {
-      // TODO show modal to re-authenticate
+      ModalState.showModal({
+        isOpen: true,
+        title: 'Authentication error',
+        hideCancelButton: true,
+        type: Type.primary,
+        actionText: 'Open login page',
+        children: `There is an issue with the your authentication data. Please re-authenticate on ${remoteId}.`,
+        handleClickAction: () => window.open(`https://${remoteId}/index.php?anita_oauth=1`)
+      })
       return
     }
     return new WordPressClient(authData)
-  }
-
-  public fetchAllRemotes = async () => {
-    const remotes = await this.getAllAccounts()
-    if (remotes?.length) {
-      for (const remote of remotes) {
-        if (remote.service === SupportedCloud.DROPBOX) {
-          continue
-        }
-        const client = await this.getClient(remote.service)
-        if (client) {
-          const projects = await client.getProjects()
-          console.log('fetchAllRemotes= ~ projects:', projects.data)
-        }
-      }
-    }
   }
 }

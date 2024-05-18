@@ -1,4 +1,5 @@
 import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { TAnitaUniversalDataStorage, TSystemData } from 'app/models/project/project.declarations'
 import axios, { AxiosInstance } from 'axios'
 
 interface IWordPressAuthData {
@@ -66,17 +67,27 @@ export class WordPressClient {
     }
   }
 
-  public async getProjects () {
+  public async getProjects (): Promise<Array<TAnitaUniversalDataStorage> | null> {
     try {
-      const response = await this.axiosInstance.get('get-projects')
-      return response
+      const response = await this.axiosInstance.get<Array<TAnitaUniversalDataStorage>>('get-projects')
+      return response.data || null
     } catch (error) {
       console.error('Error fetching projects:', error)
       throw error
     }
   }
 
-  public async saveProject (projectData: any): Promise<void> {
+  public async getProjectById (projectId: string): Promise<TAnitaUniversalDataStorage | null> {
+    try {
+      const response = await this.axiosInstance.get<TAnitaUniversalDataStorage>(`get-project/${projectId}`)
+      return response?.data || null
+    } catch (error) {
+      console.error(`Error fetching project with ID ${projectId}:`, error)
+      throw error
+    }
+  }
+
+  public async saveProject (projectData: TSystemData | TAnitaUniversalDataStorage): Promise<void> {
     try {
       const response = await this.axiosInstance.post('save-project', projectData)
       console.log('Project saved successfully:', response.data)

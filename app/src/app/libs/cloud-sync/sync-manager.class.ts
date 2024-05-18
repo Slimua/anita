@@ -1,6 +1,6 @@
 /* eslint-disable eqeqeq */
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
-import { Manager } from 'app/cross-refs-exports'
+import { Manager, SupportedCloud } from 'app/cross-refs-exports'
 import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.enum'
 import { CloudSyncState } from 'app/libs/cloud-sync/cloud-sync.const'
 import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merger.class'
@@ -48,73 +48,54 @@ type ISyncWithRemoteOrLocalProps = ISyncWithRemoteOrLocalAddProjectProps | ISync
 
 export class SyncManager {
   public static syncWithRemoteOrLocal = async (props: ISyncWithRemoteOrLocalProps): Promise<void> => {
-    console.log('syncWithRemoteOrLocal= ~ Manager.getCurrentProject()?.getSettings().remoteStorage:', Manager.getCurrentProject()?.getSettings().remoteStorage)
-    if (Manager.getCurrentProject()?.dropBoxSyncInfo.getLocalStorage() == LOCAL_STORAGE_SYSTEMS.IndexedDB && EDITOR_MODE.delete !== props.mode) {
-      await this.handleRemoteSync()
-      return
-    }
-    const remoteStorageId = this.getRemoteStorageId(props)
-    console.log('syncWithRemoteOrLocal= ~ remoteStorageId:', remoteStorageId)
-    if (remoteStorageId) {
-      this.handleWPSync(props, remoteStorageId)
+    const [remoteId, type] = SyncManager.getRemoteIdAndType(props)
+    if (remoteId && type == SupportedCloud.WORDPRESS && props.mode === EDITOR_MODE.delete) {
+      const projectIdForDelete = props.projectId
+      const client = await WordpressHelper.instance.getClient(remoteId)
+      if (client) {
+        await client.deleteProject(projectIdForDelete)
+      }
+    } else if (remoteId && type == SupportedCloud.WORDPRESS && props.type === 'element') {
+      const client = await WordpressHelper.instance.getClient(remoteId)
+      const projectIdForElement = props.projectId
+      const sectionIdForElement = props.sectionId
+      const elementIdForElement = props.elementId
+      if (!client) {
+        // TODO handle no client
+      } else if (props.mode === EDITOR_MODE.delete) {
+        await client.deleteSectionElement(projectIdForElement, sectionIdForElement, elementIdForElement)
+      } else {
+        const elementDataForElement = props.elementData
+        await client.saveSectionElement(projectIdForElement, sectionIdForElement, elementIdForElement, elementDataForElement)
+      }
+    } else if (remoteId) {
+      await this.handleRemoteSync(remoteId, type)
     }
     SyncState.setIsSavingInFs(false)
   }
 
-  private static getRemoteStorageId = (props: ISyncWithRemoteOrLocalProps): string | undefined => {
+  private static getRemoteIdAndType = (props: ISyncWithRemoteOrLocalProps): [string, SupportedCloud] | [null, null] => {
+    if (Manager.getCurrentProject()?.dropBoxSyncInfo.getLocalStorage() == LOCAL_STORAGE_SYSTEMS.IndexedDB) {
+      const remoteId = Manager.getCurrentProject()?.dropBoxSyncInfo.getLinkedFileId()!
+      return [remoteId, SupportedCloud.DROPBOX]
+    }
+    const remoteIdForWordPress = this.getRemoteIdForWordPress(props)
+    if (remoteIdForWordPress) {
+      return [remoteIdForWordPress, SupportedCloud.WORDPRESS]
+    }
+    return [null, null]
+  }
+
+  private static getRemoteIdForWordPress = (props: ISyncWithRemoteOrLocalProps): string | undefined => {
     if (props.mode === EDITOR_MODE.add && props.type === 'project') {
       return props.systemData[RESERVED_AUDS_KEYS._settings][0].remoteStorage
-    }
-    if (props.mode === EDITOR_MODE.delete && props.type === 'project') {
-      return props.projectSettings.remoteStorage
     }
     return Manager.getCurrentProject()?.getSettings().remoteStorage
   }
 
-  private static handleRemoteSync = (): Promise<void> | undefined => {
+  private static handleRemoteSync = (remoteId: string, type: SupportedCloud): Promise<void> | undefined => {
     if (SyncManager.canStartSyncWithRemote()) {
-      return new RemoteAndLocalMerger(Manager.getCurrentProject()?.dropBoxSyncInfo.getLinkedFileId()!).sync()
-    }
-  }
-
-  private static handleWPSync = async (props: ISyncWithRemoteOrLocalProps, remoteStorageId: string) => {
-    console.log('handleWPSync= ~ props:', props)
-    const wordpressHelper = WordpressHelper.instance
-    const client = await wordpressHelper.getClient(remoteStorageId)
-
-    if (!client) {
-      // TODO - develop system to put edits in a queue and try again later
-    } else if (props.type === 'project') {
-      switch (props.mode) {
-        case EDITOR_MODE.add:{
-          const projectAllDataForAdd = props.systemData
-          await client.saveProject(projectAllDataForAdd)
-          break
-        }
-        case EDITOR_MODE.edit:{
-          const projectAllDataForEdit = Manager.getCurrentProject()!.getAllData()
-          await client.saveProject(projectAllDataForEdit)
-          break
-        }
-        case EDITOR_MODE.delete:{
-          const projectIdForDelete = props.projectId
-          await client.deleteProject(projectIdForDelete)
-          break
-        }
-      }
-    } else if (props.type === 'element') {
-      const { projectId, sectionId, elementId, elementData } = props as ISyncWithRemoteOrLocalAddOrEditElementSectionProps
-      switch (props.mode) {
-        case EDITOR_MODE.add:
-          await client.saveSectionElement(projectId, sectionId, elementId, elementData)
-          break
-        case EDITOR_MODE.edit:
-          await client.saveSectionElement(projectId, sectionId, elementId, elementData)
-          break
-        case EDITOR_MODE.delete:
-          await client.deleteSectionElement(projectId, sectionId, elementId)
-          break
-      }
+      return new RemoteAndLocalMerger(remoteId, type).sync()
     }
   }
 
