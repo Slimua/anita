@@ -1,7 +1,6 @@
 import { dbInstances } from 'app/data/local-dbs/db-instances.const'
 import { IProjectSettings } from 'app/models/project/project.declarations'
 import { CLIENT_SECTIONS } from 'app/data/system-local-db/client-sections.enum'
-import { ProjectsListLoader } from 'app/libs/projects-helpers/projects-handlers/projects-list-loader.class'
 import { CloudSyncBase, SyncManager } from 'app/cross-refs-exports'
 import { EDITOR_MODE } from 'app/components/editor-mode.enum'
 
@@ -27,7 +26,6 @@ export class ProjectDeletor {
     await this.doDelete()
     await CloudSyncBase.clearRemoteId(projectId)
     await CloudSyncBase.deleteLastSync(projectId)
-    this.reloadProjectList()
   }
 
   /**
@@ -45,12 +43,5 @@ export class ProjectDeletor {
     if (dbInstances[this.projectSettings.id]) {
       await dbInstances[this.projectSettings.id].dbStore.onProjectDeleted?.()
     }
-  }
-
-  /**
-   * Reloads the project list from scratch
-   */
-  private reloadProjectList (): void {
-    new ProjectsListLoader().load()
   }
 }

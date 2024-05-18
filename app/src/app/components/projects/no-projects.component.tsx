@@ -3,12 +3,12 @@ import { ANITA_URLS } from 'app/libs/routing/anita-routes.constant'
 import { ImportProjectButton } from 'app/components/projects/project-importer-components/import-project-button.component'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useSelector } from 'react-redux'
-import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { Navigate } from 'react-router-dom'
+import { useAtomValue } from 'jotai'
+import { ProjectsListAtoms } from 'app/state/projects-list/projects-list.atoms'
 
 export const ProjectsNone: React.FC = () => {
-  const projects = useSelector((state: AnitaStore) => state.projects)
+  const projects = useAtomValue(ProjectsListAtoms.projects)
 
   if (projects?.length > 0) {
     return (

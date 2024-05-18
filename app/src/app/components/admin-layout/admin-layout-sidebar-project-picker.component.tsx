@@ -1,21 +1,21 @@
+import React, { Fragment, useRef, useState } from 'react'
 import { ANITA_URLS, URL_PARAMS } from 'app/libs/routing/anita-routes.constant'
 import { urlParamFiller } from 'app/libs/routing/url-param-fillers.function'
 import { RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
 import { Manager } from 'app/cross-refs-exports'
-import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { useClickOutside } from 'app/components/hooks/click-outside.hook'
-import React, { Fragment, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Icons } from 'app/libs/icons/icons.class'
 import { Transition } from '@headlessui/react'
+import { ProjectsListAtoms } from 'app/state/projects-list/projects-list.atoms'
+import { useAtomValue } from 'jotai'
 
 interface IProjectPickerProps {
   project: TSystemData
 }
 
 export const AdminLayoutSidebarProjectPicker: React.FC<IProjectPickerProps> = ({ project }) => {
-  const projects = useSelector((store: AnitaStore) => store.projects)
+  const projects = useAtomValue(ProjectsListAtoms.projects)
   const navigate = useNavigate()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropDownRef = useRef<HTMLDivElement>(null)

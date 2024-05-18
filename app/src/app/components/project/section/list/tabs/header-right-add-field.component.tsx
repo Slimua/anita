@@ -25,7 +25,6 @@ export const ListTabsHeaderRightAddField: React.FC<IListTabsHeaderRightAddFieldP
 
   const handleActionClick = async () => {
     const systemData = await Manager.saveProject(project as TSystemData, EDITOR_MODE.edit)
-    await Manager.loadProjectsList()
     Manager.setCurrentProject(systemData)
     ModalState.hideModal()
   }

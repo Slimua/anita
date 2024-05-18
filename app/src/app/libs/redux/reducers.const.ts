@@ -1,4 +1,4 @@
-import { LocalProjectSettings, TSystemData } from 'app/models/project/project.declarations'
+import { TSystemData } from 'app/models/project/project.declarations'
 import { formElementReducer, IFormElementState } from 'app/libs/redux/reducers/form-element.reducer'
 import { formElesValidStateReducer, IFormElesValidState } from 'app/libs/redux/reducers/form-eles-valid-state.reducer'
 import { formProjectReducer, IFormProjectState } from 'app/libs/redux/reducers/form-project.reducer'
@@ -26,7 +26,6 @@ export const REDUCERS = {
  */
 export interface AnitaStore {
   project: TSystemData
-  projects: Array<LocalProjectSettings>
   sectionsForChildOfSelector: Array<SectionDetailsDeclaration>
   formElesValidState: IFormElesValidState
   formElement: IFormElementState

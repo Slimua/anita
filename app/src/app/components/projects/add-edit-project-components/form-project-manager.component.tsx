@@ -29,7 +29,6 @@ export const FormProjectManager: React.FC = () => {
 
   const handleClickSave = async () => {
     const systemData = await Manager.saveProject(project as TSystemData, mode)
-    await Manager.loadProjectsList()
     Manager.setCurrentProject(systemData)
     navigate(urlParamFiller(ANITA_URLS.projectDetails, [{ name: URL_PARAMS.projectId, value: project[RESERVED_AUDS_KEYS._settings]![0].id }]))
   }

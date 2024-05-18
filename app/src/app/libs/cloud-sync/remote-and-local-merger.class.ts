@@ -113,7 +113,6 @@ export class RemoteAndLocalMerger {
         }
       }
     }
-    Manager.loadProjectsList()
   }
 
   private async saveSectionElementsLocally<A extends keyof IComparisonResult['local']> (
@@ -186,7 +185,6 @@ export class RemoteAndLocalMerger {
         }
       }
     }
-    Manager.loadProjectsList()
   }
 
   private async sendSectionElementsToRemoteWordPress<A extends keyof IComparisonResult['remote']> (

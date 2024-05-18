@@ -1,40 +1,18 @@
+import React from 'react'
 import { ANITA_URLS } from 'app/libs/routing/anita-routes.constant'
-import { AnitaStore } from 'app/libs/redux/reducers.const'
 import { ProjectCard } from 'app/components/projects/project-card.component'
 import { ImportProjectButton } from 'app/components/projects/project-importer-components/import-project-button.component'
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
-import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { Manager } from 'app/cross-refs-exports'
+import { useAtomValue } from 'jotai'
+import { ProjectsListAtoms } from 'app/state/projects-list/projects-list.atoms'
 
 export const ProjectsList: React.FC = () => {
-  const [hasLoaded, setHasLoaded] = useState(false)
-  const projects = useSelector((state: AnitaStore) => state.projects)
-  const projectsLength = projects?.length || 0
-
-  useEffect(() => {
-    let isMounted = true
-    const loadProjectsList = async () => {
-      await Manager.loadProjectsList()
-      setHasLoaded(true)
-    }
-    if (isMounted) {
-      loadProjectsList()
-    }
-
-    return () => {
-      isMounted = false
-    }
-  }, [projectsLength])
+  const projects = useAtomValue(ProjectsListAtoms.projects)
 
   if (Array.isArray(projects) && projects.length === 0) {
     return <Navigate to={ANITA_URLS.projectsNone} />
-  }
-
-  if (!hasLoaded) {
-    return null
   }
 
   return (
