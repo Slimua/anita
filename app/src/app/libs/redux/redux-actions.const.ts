@@ -2,8 +2,6 @@
  * Supported reducer actions
  */
 export enum REDUX_ACTIONS {
-  // LAYOUT
-  toggleSidebar = 1,
   // PROJECT
   setCurrentProject,
   resetCurrentProject,

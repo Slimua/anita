@@ -1,8 +1,6 @@
 /* eslint-disable eqeqeq */
 import React, { useEffect } from 'react'
 import { AnitaStore } from 'app/libs/redux/reducers.const'
-import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
-import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { DropboxSyncButton } from 'app/components/admin-layout/header/dropbox-sync/dropbox-sync-button'
@@ -13,14 +11,16 @@ import { Manager } from 'app/cross-refs-exports'
 import { WordPressSyncButtons } from 'app/components/admin-layout/header/wordpress-sync/wordpress-sync-buttons'
 import { useAtomValue } from 'jotai'
 import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
+import { LayoutState } from 'app/state/layout/layout-state.class'
+import { LayoutAtoms } from 'app/state/layout/layout.atoms'
 
 export const AdminLayoutHeader: React.FC = () => {
-  const sidebarHideClass = useSelector((store: AnitaStore) => store.layout.sidebar)
+  const sidebarHideClass = useAtomValue(LayoutAtoms.sidebar)
   const project = useSelector((store: AnitaStore) => store.project)
   const remoteIds = useAtomValue(SyncStateAtoms.wordPressRemotesIds)
   const remoteIdsLength = remoteIds?.length
   const handleClickSidebar = () => {
-    storeDispatcher({ type: REDUX_ACTIONS.toggleSidebar })
+    LayoutState.toggleSidebar()
   }
 
   const localStorage = project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.localStorage!

@@ -1,14 +1,14 @@
+import React, { memo, useState } from 'react'
 import { AdminLayoutSidebarEditMenuButton } from 'app/components/admin-layout/admin-layout-sidebar-edit-menu-button.component'
 import { AdminLayoutSidebarMenu } from 'app/components/admin-layout/admin-layout-sidebar-menu.component'
 import { useTippyTooltip } from 'app/components/hooks/tippy-tooltip'
 import { Icons } from 'app/libs/icons/icons.class'
-import { AnitaStore } from 'app/libs/redux/reducers.const'
+import { LayoutAtoms } from 'app/state/layout/layout.atoms'
 import { appVersion } from 'app/version'
-import React, { memo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useAtomValue } from 'jotai'
 
 export const AdminLayoutSidebar: React.FC = memo(function Sidebar () {
-  const toggledClass = useSelector((store: AnitaStore) => store.layout.sidebar)
+  const toggledClass = useAtomValue(LayoutAtoms.sidebar)
   const [isEditingMenuItemsVisibility, setIsEditingMenuItemsVisibility] = useState(false)
 
   const handleEditMenuItemsVisibility = () => {

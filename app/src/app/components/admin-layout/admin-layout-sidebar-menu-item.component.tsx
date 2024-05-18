@@ -6,9 +6,8 @@ import { Link } from 'react-router-dom'
 import { Manager } from 'app/cross-refs-exports'
 import { Icons } from 'app/libs/icons/icons.class'
 import { ISection } from 'app/models/section/section.declarations'
-import { storeDispatcher } from 'app/libs/redux/store-dispatcher.function'
-import { REDUX_ACTIONS } from 'app/libs/redux/redux-actions.const'
 import { AdminLayoutSidebarMenuItemIcon } from 'app/components/admin-layout/admin-layout-sidebar-menu-item-icon.component'
+import { LayoutState } from 'app/state/layout/layout-state.class'
 
 const baseStyleOfSidebarLinks = 'flex items-center block py-2.5 px-2 transition duration-200 border-l-2 hover:border-prussian-blue-700 hover:text-prussian-blue-500 text-sm font-semibold'
 
@@ -58,7 +57,7 @@ export const AdminLayoutSidebarMenuItem: React.FC<IAdminLayoutSidebarMenuItemPro
 
   const handleLinkClick = () => {
     props.setCurrentSelectedSectionId(props.section.id)
-    storeDispatcher({ type: REDUX_ACTIONS.toggleSidebar })
+    LayoutState.toggleSidebar()
   }
 
   return (

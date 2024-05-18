@@ -10,7 +10,7 @@ import { FormFieldsModel, TSupportedFormsTypes } from 'app/components/shared-com
 export type Action<T extends REDUX_ACTIONS> = T extends ActionsWithoutPayload ? ActionWithoutPayload :
   ActionWithPayload<T>;
 
-type ActionsWithoutPayload = REDUX_ACTIONS.updateFormProjectAddSection | REDUX_ACTIONS.toggleSidebar | REDUX_ACTIONS.setProjectEditorMode | REDUX_ACTIONS.resetCurrentProject;
+type ActionsWithoutPayload = REDUX_ACTIONS.updateFormProjectAddSection | REDUX_ACTIONS.setProjectEditorMode | REDUX_ACTIONS.resetCurrentProject;
 
 interface ActionWithPayload<T extends REDUX_ACTIONS> {
   type: T
@@ -39,7 +39,6 @@ interface ActionsPayloads {
   [REDUX_ACTIONS.updateFormProjectUpdateFormModelDeleteOption]: IUpdateFormProjectUpdateFormModelDeleteOptionPayload
   [REDUX_ACTIONS.updateFormProjectUpdateFormModelOptionValue]: IUpdateFormProjectUpdateFormModelOptionValuePayload
   [REDUX_ACTIONS.setProjectEditorMode]: void
-  [REDUX_ACTIONS.toggleSidebar]: void
   [REDUX_ACTIONS.updateFormProjectAddSection]: void
   [REDUX_ACTIONS.resetSectionForChildOfSelector]: void
   [REDUX_ACTIONS.resetCurrentProject]: void
