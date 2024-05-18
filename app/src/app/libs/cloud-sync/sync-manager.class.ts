@@ -88,12 +88,12 @@ export class SyncManager {
       switch (props.mode) {
         case EDITOR_MODE.add:{
           const projectAllDataForAdd = props.systemData
-          await client.createProject(projectAllDataForAdd)
+          await client.saveProject(projectAllDataForAdd)
           break
         }
         case EDITOR_MODE.edit:{
           const projectAllDataForEdit = Manager.getCurrentProject()!.getAllData()
-          await client.editProject(projectAllDataForEdit)
+          await client.saveProject(projectAllDataForEdit)
           break
         }
         case EDITOR_MODE.delete:{
@@ -106,10 +106,10 @@ export class SyncManager {
       const { projectId, sectionId, elementId, elementData } = props as ISyncWithRemoteOrLocalAddOrEditElementSectionProps
       switch (props.mode) {
         case EDITOR_MODE.add:
-          await client.addSectionElement(projectId, sectionId, elementId, elementData)
+          await client.saveSectionElement(projectId, sectionId, elementId, elementData)
           break
         case EDITOR_MODE.edit:
-          await client.editSectionElement(projectId, sectionId, elementId, elementData)
+          await client.saveSectionElement(projectId, sectionId, elementId, elementData)
           break
         case EDITOR_MODE.delete:
           await client.deleteSectionElement(projectId, sectionId, elementId)
