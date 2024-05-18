@@ -12,7 +12,7 @@ import { Manager } from 'app/cross-refs-exports'
 export const ProjectsList: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState(false)
   const projects = useSelector((state: AnitaStore) => state.projects)
-  const projectsLenght = projects?.length || 0
+  const projectsLength = projects?.length || 0
 
   useEffect(() => {
     let isMounted = true
@@ -27,7 +27,7 @@ export const ProjectsList: React.FC = () => {
     return () => {
       isMounted = false
     }
-  }, [projectsLenght])
+  }, [projectsLength])
 
   if (Array.isArray(projects) && projects.length === 0) {
     return <Navigate to={ANITA_URLS.projectsNone} />
