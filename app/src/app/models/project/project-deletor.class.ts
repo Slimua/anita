@@ -13,35 +13,34 @@ export class ProjectDeletor {
    * @param projectSettings the settings of the project to delete
    */
   constructor (
-    private projectSettings: IProjectSettings
+    private projectId: string
   ) { }
 
   /**
    * Deletes the project and reloads the list of projects
    */
   public async delete (): Promise<void> {
-    const projectId = this.projectSettings.id
     await this.callOnProjectDeleted()
     this.deleteOnRemote()
     await this.doDelete()
-    await CloudSyncBase.clearRemoteId(projectId)
-    await CloudSyncBase.deleteLastSync(projectId)
+    await CloudSyncBase.clearRemoteId(this.projectId)
+    await CloudSyncBase.deleteLastSync(this.projectId)
   }
 
   /**
    * Performs the delete action on IndexedDB with db-connector
    */
   private async doDelete (): Promise<void> {
-    await dbInstances.system.callDeletor<IProjectSettings>(CLIENT_SECTIONS.projects, { id: this.projectSettings.id }).autoDelete()
+    await dbInstances.system.callDeletor<IProjectSettings>(CLIENT_SECTIONS.projects, { id: this.projectId }).autoDelete()
   }
 
   private deleteOnRemote () {
-    SyncManager.syncWithRemoteOrLocal({ mode: EDITOR_MODE.delete, type: 'project', projectId: this.projectSettings.id, projectSettings: this.projectSettings })
+    SyncManager.syncWithRemoteOrLocal({ mode: EDITOR_MODE.delete, type: 'project', projectId: this.projectId })
   }
 
   private async callOnProjectDeleted (): Promise<void> {
-    if (dbInstances[this.projectSettings.id]) {
-      await dbInstances[this.projectSettings.id].dbStore.onProjectDeleted?.()
+    if (dbInstances[this.projectId]) {
+      await dbInstances[this.projectId].dbStore.onProjectDeleted?.()
     }
   }
 }

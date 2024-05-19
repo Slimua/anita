@@ -2,8 +2,9 @@ import { Type } from 'app/components/shared-components/common-ui-eles/components
 import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { CloudSyncTable } from 'app/libs/cloud-sync/cloud-sync.const'
 import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
-import { IWordPressRemoteInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { IWordPressRemoteInfo, WORD_PRESS_ROLE_WEIGHT } from 'app/libs/cloud-sync/wordpress/wordpress.const'
 import { ProjectDataImporter } from 'app/libs/projects-helpers/project-importers/project-data-importer.class'
+import { ProjectDeletor } from 'app/models/project/project-deletor.class'
 import { RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { Bucket } from 'app/state/bucket.state'
 import { ModalState } from 'app/state/modal/modal-state.class'
@@ -101,15 +102,33 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
     if (!client) {
       return
     }
-    const remoteProjects = await client.getProjects()
-    if (!remoteProjects?.length) {
-      return
-    }
-    const localProjects = Bucket.general.get(ProjectsListAtoms.projects)?.filter(project => project.remoteStorage === remoteId)?.map(project => project.id)
+    const remoteProjects = (await client.getProjects()) || []
+    const localProjects = Bucket.general.get(ProjectsListAtoms.projects)?.filter(project => project.remoteStorage === remoteId)
+    const localProjectsIds = localProjects?.map(project => project.id)
     for (const remoteProject of remoteProjects) {
-      if (!localProjects?.includes(remoteProject[RESERVED_AUDS_KEYS._settings][0].id)) {
+      if (!localProjectsIds?.includes(remoteProject[RESERVED_AUDS_KEYS._settings][0].id)) {
         new ProjectDataImporter(remoteProject).import()
       }
     }
+    const remoteProjectsIds = remoteProjects.map(project => project[RESERVED_AUDS_KEYS._settings][0].id)
+    for (const localProjectId of localProjectsIds) {
+      if (remoteProjectsIds.includes(localProjectId)) {
+        continue
+      }
+      new ProjectDeletor(localProjectId).delete()
+    }
+  }
+
+  public canDeleteProject (remoteId: string): boolean {
+    const remoteInfo = Bucket.general.get(SyncStateAtoms.remoteInfo[remoteId])
+    if (!remoteInfo) {
+      return false
+    }
+    const userRole = remoteInfo.data.user_role
+    const userRoleWeight = WORD_PRESS_ROLE_WEIGHT[userRole]
+    if (userRoleWeight >= WORD_PRESS_ROLE_WEIGHT.administrator) {
+      return true
+    }
+    return false
   }
 }

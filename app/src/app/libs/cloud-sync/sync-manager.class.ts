@@ -5,7 +5,7 @@ import { LOCAL_STORAGE_SYSTEMS } from 'app/data/local-dbs/local-storage-systems.
 import { CloudSyncState } from 'app/libs/cloud-sync/cloud-sync.const'
 import { RemoteAndLocalMerger } from 'app/libs/cloud-sync/remote-and-local-merger.class'
 import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
-import { IProjectSettings, RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
+import { RESERVED_AUDS_KEYS, TSystemData } from 'app/models/project/project.declarations'
 import { ISectionElement } from 'app/models/section-element/section-element.declarations'
 import { SyncState } from 'app/state/sync/sync-state.class'
 
@@ -24,7 +24,6 @@ interface ISyncWithRemoteOrLocalDeleteProjectProps {
   mode: EDITOR_MODE.delete
   type: 'project'
   projectId: string
-  projectSettings: IProjectSettings
 }
 
 interface ISyncWithRemoteOrLocalAddOrEditElementSectionProps {
@@ -75,7 +74,7 @@ export class SyncManager {
   }
 
   private static getRemoteIdAndType = (props: ISyncWithRemoteOrLocalProps): [string, SupportedCloud] | [null, null] => {
-    if (Manager.getCurrentProject()?.dropBoxSyncInfo.getLocalStorage() == LOCAL_STORAGE_SYSTEMS.IndexedDB) {
+    if (Manager.getCurrentProject()?.dropBoxSyncInfo.getLocalStorage() == LOCAL_STORAGE_SYSTEMS.IndexedDB && Manager.getCurrentProject()?.dropBoxSyncInfo.getLinkedFileId()) {
       const remoteId = Manager.getCurrentProject()?.dropBoxSyncInfo.getLinkedFileId()!
       return [remoteId, SupportedCloud.DROPBOX]
     }

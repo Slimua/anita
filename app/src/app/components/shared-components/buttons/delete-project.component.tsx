@@ -8,6 +8,8 @@ import React from 'react'
 import { useNavigate } from 'react-router'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
 import { ModalState } from 'app/state/modal/modal-state.class'
+import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
+import { ProjectDeletor } from 'app/models/project/project-deletor.class'
 
 interface IDeleteProjectButtonProps {
   project: IProjectSettings
@@ -20,7 +22,7 @@ export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ proje
     if (Manager.getCurrentProject()?.getId() === project.id) {
       storeDispatcher({ type: REDUX_ACTIONS.resetCurrentProject })
     }
-    (await Manager.getProjectById(project.id, true))!.delete()
+    new ProjectDeletor(project.id).delete()
     navigate(ANITA_URLS.projectsList)
   }
 
@@ -38,6 +40,10 @@ export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ proje
         </p>
       )
     })
+  }
+
+  if (project.remoteStorage && !WordpressHelper.instance.canDeleteProject(project.remoteStorage)) {
+    return null
   }
 
   return (

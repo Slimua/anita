@@ -2,7 +2,6 @@ import { IProjectSettings, RESERVED_AUDS_KEYS, TAnitaUniversalDataStorage, TSyst
 import { ISection } from 'app/models/section/section.declarations'
 import { GetOptionsForParentsSelector } from 'app/models/project/get-options-for-parents-selector.class'
 import { GetParentInfoForDetailsView } from 'app/models/project/get-parent-info-for-details-view.class'
-import { ProjectDeletor } from 'app/models/project/project-deletor.class'
 import { ExportScope, ProjectExporter } from 'app/models/project/project-exporter.class'
 import { Section } from 'app/models/section/section.class'
 import { IOptionKeysModel, OptionKeysModelGroup } from 'app/components/shared-components/forms-automator/form-automator.types'
@@ -48,10 +47,6 @@ export class Project {
       [RESERVED_AUDS_KEYS._settings]: [this.settings],
       [RESERVED_AUDS_KEYS._sections]: this.sectionsDefinitions
     }).uploadToCloudService(path)
-  }
-
-  public delete = (): void => {
-    new ProjectDeletor(this.settings).delete()
   }
 
   public getSectionById = (sectionId: string | undefined): Section | null => {

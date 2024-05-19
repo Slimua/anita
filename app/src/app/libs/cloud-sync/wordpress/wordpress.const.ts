@@ -6,11 +6,13 @@ export const WORD_PRESS_ROLE_WEIGHT = {
   administrator: 5
 }
 
+type TUserRole = 'administrator' | 'editor' | 'author' | 'contributor' | 'subscriber'
+
 interface IWordPressUser {
   last_name: string
   name: string
   picture: string
-  role: 'administrator' | 'editor' | 'author' | 'contributor' | 'subscriber'
+  role: TUserRole
 }
 
 export interface IWordPressSpaceInfo {
@@ -18,7 +20,7 @@ export interface IWordPressSpaceInfo {
   users: Array<IWordPressUser>
   site_name: string
   site_url: string
-  user_role: string
+  user_role: TUserRole
   icon_base_64: string
 }
 
