@@ -15,7 +15,7 @@ import { LayoutState } from 'app/state/layout/layout-state.class'
 import { LayoutAtoms } from 'app/state/layout/layout.atoms'
 
 export const AdminLayoutHeader: React.FC = () => {
-  const sidebarHideClass = useAtomValue(LayoutAtoms.sidebar)
+  const sidebarCollapsed = useAtomValue(LayoutAtoms.sidebarCollapsed)
   const project = useSelector((store: AnitaStore) => store.project)
   const remoteIds = useAtomValue(SyncStateAtoms.wordPressRemotesIds)
   const remoteIdsLength = remoteIds?.length
@@ -61,7 +61,7 @@ export const AdminLayoutHeader: React.FC = () => {
         </div>
       )}
 
-      {sidebarHideClass === '' && (<div onClick={handleClickSidebar} className="absolute inset-0 h-full w-full z-10 md:hidden"></div>)}
+      {!sidebarCollapsed && (<div onClick={handleClickSidebar} className="absolute inset-0 h-full w-full z-10 md:hidden"></div>)}
 
     </div>
   )
