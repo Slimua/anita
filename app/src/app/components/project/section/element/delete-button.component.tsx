@@ -30,8 +30,6 @@ export const ProjectSectionElementDeleteButton: React.FC<IProjectSectionElementD
         actionText: 'Delete',
         handleClickAction: handleClickDelete
       }],
-      icon: 'warningOutline',
-      iconClassName: 'text-red-600',
       children: (
         <>
           <p className="text-sm text-gray-500">

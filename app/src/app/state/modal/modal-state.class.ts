@@ -1,7 +1,6 @@
 import { Bucket } from 'app/state/bucket.state'
 import { IButtonWithTooltipProps } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { TIconName } from 'app/libs/icons/icons.class'
 import { ReactNode } from 'react'
 import { ModalStateAtoms } from './modal-state.atoms'
 
@@ -17,8 +16,6 @@ export interface IModalPropsOpen {
   title: string
   children: ReactNode
   type?: Type.primary | Type.danger
-  icon?: TIconName
-  iconClassName?: string
   hideCancelButton?: boolean
   hideActionRow?: boolean
   leftButton?: IButtonWithTooltipProps
