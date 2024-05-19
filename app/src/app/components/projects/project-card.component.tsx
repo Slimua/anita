@@ -27,13 +27,15 @@ export const ProjectCard: React.FC<IProjectCardProps> = ({ project }) => {
 
         <CardFooter>
           <DeleteProjectButton project={project} />
-          {(
-            projectState === null ||
+          <div className="ml-auto">
+            {(
+              projectState === null ||
             projectState[RESERVED_AUDS_KEYS._settings][0].id !== project.id ||
             dbInstances[project.id] === undefined
-          )
-            ? <ProjectNotLoadedFooter project={project} />
-            : <ProjectLoadedFooter project={project} />}
+            )
+              ? <ProjectNotLoadedFooter project={project} />
+              : <ProjectLoadedFooter project={project} />}
+          </div>
         </CardFooter>
 
       </div>
