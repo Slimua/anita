@@ -45,6 +45,10 @@ export class ModalState {
   }
 
   public static hideModal = () => {
-    Bucket.general.set(ModalStateAtoms.modalProps, { isOpen: false })
+    const currentConfig = Bucket.general.get(ModalStateAtoms.modalProps)
+    Bucket.general.set(ModalStateAtoms.modalProps, { ...currentConfig, isOpen: false })
+    setTimeout(() => {
+      Bucket.general.set(ModalStateAtoms.modalProps, { isOpen: false })
+    }, 300)
   }
 }
