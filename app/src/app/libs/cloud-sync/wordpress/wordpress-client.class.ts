@@ -29,7 +29,7 @@ export class WordPressClient {
     this.axiosInstance.interceptors.response.use((response) => response, async (error) => {
       if (error.response?.data?.code === 'rest_token_tampered') {
         console.log('this.axiosInstance.interceptors.response.use ~ error.response?.data:', error.response?.data)
-        return Promise.resolve({ statusText: 'Token tampered' })
+        return Promise.resolve({ statusText: 'rest_token_tampered' })
       }
       if (error.response?.data?.code === 'rest_token_expired') {
         /* originalRequest._retry = true

@@ -6,7 +6,7 @@ interface IWordPressSyncButtonsProps {
 }
 
 export const WordPressSyncButtons: React.FC<IWordPressSyncButtonsProps> = (props) => (
-  <div className="flex items-center space-x-2 mr-2">
+  <div className="flex items-center space-x-2">
     {props.remoteIds.map((remoteId) => (
       <WordPressSyncButton
         key={remoteId}

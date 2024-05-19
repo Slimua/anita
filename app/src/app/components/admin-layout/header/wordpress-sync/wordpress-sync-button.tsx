@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAtomValue } from 'jotai'
 import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
+import { WordpressHelper } from 'app/libs/cloud-sync/wordpress/wordpress-helper.class'
 
 interface IWordPressSyncButtonProps {
   remoteId: string
@@ -17,8 +18,16 @@ const getFallbackText = (siteName: string) => {
 export const WordPressSyncButton: React.FC<IWordPressSyncButtonProps> = (props) => {
   const remoteInfo = useAtomValue(SyncStateAtoms.remoteInfo[props.remoteId])
 
+  useEffect(() => {
+    WordpressHelper.instance.syncWithRemote(props.remoteId)
+  }, [props.remoteId])
+
   if (!remoteInfo?.data || !remoteInfo.data.site_name) {
     return null
+  }
+
+  const handleClick = () => {
+    WordpressHelper.instance.syncWithRemote(props.remoteId)
   }
 
   return (
@@ -27,6 +36,7 @@ export const WordPressSyncButton: React.FC<IWordPressSyncButtonProps> = (props) 
         <button
           className="w-8 h-8 rounded-full flex items-center justify-center bg-gray-300 text-white font-bold text-xs border-none"
           aria-label="WordPress Sync"
+          onClick={handleClick}
         >
           {getFallbackText(remoteInfo.data.site_name)}
         </button>
@@ -35,6 +45,7 @@ export const WordPressSyncButton: React.FC<IWordPressSyncButtonProps> = (props) 
         <button
           className="w-8 h-8 p-1 rounded-full flex items-center justify-center border border-gray-300"
           aria-label="WordPress Sync"
+          onClick={handleClick}
         >
           <img src={remoteInfo.data.icon_base_64} alt={remoteInfo.data.site_name} className="w-full h-full rounded-full" />
         </button>

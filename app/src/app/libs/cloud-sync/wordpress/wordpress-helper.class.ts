@@ -3,8 +3,11 @@ import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { CloudSyncTable } from 'app/libs/cloud-sync/cloud-sync.const'
 import { WordPressClient } from 'app/libs/cloud-sync/wordpress/wordpress-client.class'
 import { IWordPressRemoteInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { ProjectDataImporter } from 'app/libs/projects-helpers/project-importers/project-data-importer.class'
+import { RESERVED_AUDS_KEYS } from 'app/models/project/project.declarations'
 import { Bucket } from 'app/state/bucket.state'
 import { ModalState } from 'app/state/modal/modal-state.class'
+import { ProjectsListAtoms } from 'app/state/projects-list/projects-list.atoms'
 import { SyncStateAtoms } from 'app/state/sync/sync-state.atoms'
 import { SyncState } from 'app/state/sync/sync-state.class'
 import { liveQuery } from 'dexie'
@@ -55,7 +58,7 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
         if (res.statusText === 'OK') {
           const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
           this.saveRemoteInfo(remoteId, res.data)
-        } else if (res?.statusText === 'Token tampered' || res?.statusText === 'Token expired') {
+        } else if (res?.statusText === 'rest_token_tampered') {
           ModalState.showModal({
             isOpen: true,
             title: 'Authentication error',
@@ -87,5 +90,22 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
       return
     }
     return new WordPressClient(authData)
+  }
+
+  public async syncWithRemote (remoteId: string) {
+    const client = await this.getClient(remoteId)
+    if (!client) {
+      return
+    }
+    const remoteProjects = await client.getProjects()
+    if (!remoteProjects?.length) {
+      return
+    }
+    const localProjects = Bucket.general.get(ProjectsListAtoms.projects)?.filter(project => project.remoteStorage === remoteId)?.map(project => project.id)
+    for (const remoteProject of remoteProjects) {
+      if (!localProjects?.includes(remoteProject[RESERVED_AUDS_KEYS._settings][0].id)) {
+        new ProjectDataImporter(remoteProject).import()
+      }
+    }
   }
 }
