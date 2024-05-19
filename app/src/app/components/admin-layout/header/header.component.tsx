@@ -19,9 +19,6 @@ export const AdminLayoutHeader: React.FC = () => {
   const project = useSelector((store: AnitaStore) => store.project)
   const remoteIds = useAtomValue(SyncStateAtoms.wordPressRemotesIds)
   const remoteIdsLength = remoteIds?.length
-  const handleClickSidebar = () => {
-    LayoutState.toggleSidebar()
-  }
 
   const localStorage = project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.localStorage!
 
@@ -31,19 +28,24 @@ export const AdminLayoutHeader: React.FC = () => {
     }
   }, [localStorage])
 
-  const headerElementsNumber = Number(!!project) + Number(!!remoteIdsLength) + Number(!!project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id)
+  const hasMenu = !!project
+  const hasWordPressRemotes = !!remoteIdsLength
+  const hasProjectLoaded = !!project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id
+  const headerElementsNumber = Number(hasMenu) + Number(hasWordPressRemotes) + Number(hasProjectLoaded)
 
   return (
     <div className={`bg-white text-gray-700 flex items-center h-14 shadow-md ${headerElementsNumber > 0 ? 'justify-between' : 'justify-center md:justify-start'}`}>
-      {!!project && (
-        <button className="mobile-menu-button p-4 focus:outline-none  md:hidden" onClick={handleClickSidebar}>
-          <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+      {(hasMenu || hasProjectLoaded || hasWordPressRemotes) && (
+        <div className="flex items-center w-1/3 md:hidden">
+          <button className="mobile-menu-button p-4 focus:outline-none" onClick={LayoutState.toggleSidebar}>
+            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
       )}
 
-      <div className={`relative flex items-center lg:w-auto lg:static md:pl-5 ${headerElementsNumber === 1 ? 'ml-2 md:ml-0' : ''}`}>
+      <div className={`relative grow flex items-center justify-center md:justify-start md:pl-5 ${headerElementsNumber === 1 ? 'ml-2 md:ml-0' : ''}`}>
         <Link to="/" className={'text-lg font-bold leading-relaxed inline-block md:mr-4 py-2 whitespace-no-wrap uppercase'}>
           <img src={`${process.env.PUBLIC_URL}/assets/logo/logo_square.svg`} style={{ height: '30px', width: 'auto' }} alt="Anita" />
         </Link>
@@ -52,16 +54,19 @@ export const AdminLayoutHeader: React.FC = () => {
         </Link>
       </div>
 
-      {!!remoteIdsLength && (<WordPressSyncButtons remoteIds={remoteIds} />)}
-
-      {project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id && !project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.remoteStorage && (
-        <div>
-          {localStorage == LOCAL_STORAGE_SYSTEMS.IndexedDB && (<DropboxSyncButton projectId={project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id} />)}
-          {localStorage == LOCAL_STORAGE_SYSTEMS.json && (<LocalFsInfo />)}
+      {(hasMenu || hasProjectLoaded || hasWordPressRemotes) && (
+        <div className="flex items-center justify-end w-1/3 md:pr-5">
+          {hasProjectLoaded && !project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.remoteStorage && (
+            <div>
+              {localStorage == LOCAL_STORAGE_SYSTEMS.IndexedDB && (<DropboxSyncButton projectId={project?.[RESERVED_AUDS_KEYS._settings]?.[0]?.id} />)}
+              {localStorage == LOCAL_STORAGE_SYSTEMS.json && (<LocalFsInfo />)}
+            </div>
+          )}
+          {!!remoteIdsLength && (<WordPressSyncButtons remoteIds={remoteIds} />)}
         </div>
       )}
 
-      {!sidebarCollapsed && (<div onClick={handleClickSidebar} className="absolute inset-0 h-full w-full z-10 md:hidden"></div>)}
+      {!sidebarCollapsed && (<div onClick={LayoutState.toggleSidebar} className="absolute inset-0 h-full w-full z-10 md:hidden"></div>)}
 
     </div>
   )
