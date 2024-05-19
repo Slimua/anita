@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from 'app/components/shared-components/common-ui-eles/button.component'
 import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
-import { useModalContext } from 'app/components/shared-components/modals/modal-context'
 import { SupportedCloud } from 'app/cross-refs-exports'
 import { DropboxHelper } from 'app/libs/cloud-sync/dropbox/dropbox-helper.class'
 import { OAuthUtils } from 'app/libs/cloud-sync/o-auth-utils.class'
