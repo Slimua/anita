@@ -9,8 +9,10 @@ import { useAtomValue } from 'jotai'
 import { ModalStateAtoms } from 'app/state/modal/modal-state.atoms'
 
 const Modal: React.FC<IModalProps> = (props) => {
-  const handleActionClick = () => {
-    (props as IModalPropsOpen).handleClickAction?.()
+  const handleActionClick = (callback?: () => void) => {
+    if (typeof callback === 'function') {
+      callback()
+    }
     ModalState.hideModal()
   }
   const cancelAction = () => {
@@ -78,13 +80,16 @@ const Modal: React.FC<IModalProps> = (props) => {
                         onClick={cancelAction}
                       />
                     )}
-                    <Button
-                      id="action-button"
-                      type={(props as IModalPropsOpen).type!}
-                      label={(props as IModalPropsOpen).actionText!}
-                      onClick={handleActionClick}
-                      disabled={(props as IModalPropsOpen).disableAction}
-                    />
+                    {!!(props as IModalPropsOpen).ctas?.length && (props as IModalPropsOpen).ctas!.map((cta, index) => (
+                      <Button
+                        key={index}
+                        id="action-button"
+                        type={cta.actionType || (props as IModalPropsOpen).type!}
+                        label={cta.actionText}
+                        onClick={() => handleActionClick(cta.handleClickAction)}
+                        disabled={cta.disableAction}
+                      />
+                    ))}
                   </div>)}
               </Dialog.Panel>
             </Transition.Child>

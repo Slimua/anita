@@ -14,14 +14,18 @@ export const ListTabsHeaderRightEditView: React.FC<IListTabsHeaderRightEditViewP
   const modalConfigsByView: { [key: number]: IModalProps } = {
     [SupportedViews.grid]: {
       title: 'Edit Card Layout',
-      actionText: 'Close',
+      ctas: [{
+        actionText: 'Close'
+      }],
       hideCancelButton: true,
       type: Type.primary,
       children: <>ToDo</>
     },
     [SupportedViews.table]: {
       title: 'Edit visible columns',
-      actionText: 'Close',
+      ctas: [{
+        actionText: 'Close'
+      }],
       hideCancelButton: true,
       type: Type.primary,
       children: <><ListTabsHeaderRightEditViewTable sectionId={props.sectionId} /></>

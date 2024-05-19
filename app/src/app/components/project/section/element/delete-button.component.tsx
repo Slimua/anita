@@ -25,9 +25,11 @@ export const ProjectSectionElementDeleteButton: React.FC<IProjectSectionElementD
   const handleClickModal = () => {
     ModalState.showModal({
       title: 'Delete element',
-      actionText: 'Delete',
       type: Type.danger,
-      handleClickAction: handleClickDelete,
+      ctas: [{
+        actionText: 'Delete',
+        handleClickAction: handleClickDelete
+      }],
       icon: 'warningOutline',
       iconClassName: 'text-red-600',
       children: (

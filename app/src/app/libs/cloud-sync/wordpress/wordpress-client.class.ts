@@ -1,5 +1,9 @@
+import { Type } from 'app/components/shared-components/common-ui-eles/components.const'
+import { CloudSyncBase, SupportedCloud } from 'app/cross-refs-exports'
 import { IWordPressSpaceInfo } from 'app/libs/cloud-sync/wordpress/wordpress.const'
+import { Logger } from 'app/libs/logger/logger.class'
 import { TAnitaUniversalDataStorage, TSystemData } from 'app/models/project/project.declarations'
+import { ModalState } from 'app/state/modal/modal-state.class'
 import axios, { AxiosInstance } from 'axios'
 
 interface IWordPressAuthData {
@@ -10,10 +14,11 @@ interface IWordPressAuthData {
 
 export class WordPressClient {
   private axiosInstance: AxiosInstance
-  private authData: IWordPressAuthData
 
-  constructor (authData: IWordPressAuthData) {
-    this.authData = authData
+  constructor (
+    private remoteId: string,
+    private authData: IWordPressAuthData
+  ) {
     this.axiosInstance = axios.create({
       baseURL: `${this.authData.remoteBaseUrl}/wp-json/anita-api/v1/`
     })
@@ -27,16 +32,18 @@ export class WordPressClient {
     }, (error) => Promise.reject(error))
 
     this.axiosInstance.interceptors.response.use((response) => response, async (error) => {
+      const originalRequest = error.config
       if (error.response?.data?.code === 'rest_token_tampered') {
         console.log('this.axiosInstance.interceptors.response.use ~ error.response?.data:', error.response?.data)
         return Promise.resolve({ statusText: 'rest_token_tampered' })
       }
       if (error.response?.data?.code === 'rest_token_expired') {
-        /* originalRequest._retry = true
+        originalRequest._retry = true
         const newAccessToken = await this.refreshAccessToken()
         this.authData.access_token = newAccessToken
         axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`
-        return this.axiosInstance(originalRequest) */
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
+        return this.axiosInstance(originalRequest)
       }
       // create custom error with response data
       if (error.response?.data?.message) {
@@ -48,9 +55,31 @@ export class WordPressClient {
   }
 
   private async refreshAccessToken (): Promise<string> {
-    // Implement the logic to refresh the access token using the refresh_token
-    // This is a placeholder implementation
-    return Promise.resolve('new_access_token')
+    try {
+      const response = await axios.post(`${this.authData.remoteBaseUrl}/wp-json/anita-api/v1/refresh-token`, {
+        refresh_token: this.authData.refresh_token
+      })
+      const newAccessToken = response.data.access_token
+      this.authData.access_token = newAccessToken
+      const cloudSyncInstance = new CloudSyncBase(SupportedCloud.WORDPRESS)
+      cloudSyncInstance.storeDataForService(this.authData, this.remoteId)
+      return newAccessToken
+    } catch (error) {
+      Logger.error('Error refreshing access token:', error as string)
+      const cleanRemoteUrl = this.authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
+      ModalState.showModal({
+        isOpen: true,
+        title: 'Authentication error',
+        hideCancelButton: true,
+        type: Type.primary,
+        children: `There is an issue with the your authentication data. Please re-authenticate on ${cleanRemoteUrl}.`,
+        ctas: [{
+          actionText: 'Open login page',
+          handleClickAction: () => this.openLoginPage()
+        }]
+      })
+      throw error
+    }
   }
 
   public openLoginPage (): void {

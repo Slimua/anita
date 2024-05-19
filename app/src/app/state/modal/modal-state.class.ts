@@ -5,19 +5,24 @@ import { TIconName } from 'app/libs/icons/icons.class'
 import { ReactNode } from 'react'
 import { ModalStateAtoms } from './modal-state.atoms'
 
+interface ICta {
+  actionText: string
+  actionType?: Type
+  disableAction?: boolean
+  handleClickAction?: () => void
+}
+
 export interface IModalPropsOpen {
   isOpen?: true
   title: string
-  actionText: string
   children: ReactNode
   type?: Type.primary | Type.danger
   icon?: TIconName
   iconClassName?: string
-  disableAction?: boolean
   hideCancelButton?: boolean
   hideActionRow?: boolean
   leftButton?: IButtonWithTooltipProps
-  handleClickAction?: () => void
+  ctas?: Array<ICta>
   handleClickCancel?: () => void
   handleOnClose?: () => void
 }

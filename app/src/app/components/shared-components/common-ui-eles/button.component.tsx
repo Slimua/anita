@@ -22,8 +22,6 @@ export interface IButtonWithTooltipProps {
   type: Type
   fill?: TFill
   href?: string
-  onClick?: (e: React.MouseEvent) => void
-  onMouseDown?: (e: React.MouseEvent) => void
   breakpoint?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
   size?: keyof typeof sizeClasses
   marginClassName?: string
@@ -33,6 +31,8 @@ export interface IButtonWithTooltipProps {
   labelClassName?: string
   tooltipContainerClassName?: string
   disabled?: boolean
+  onClick?: (e: React.MouseEvent) => void
+  onMouseDown?: (e: React.MouseEvent) => void
 }
 
 enum LabelBreakpoints {

@@ -82,7 +82,7 @@ export class CloudSyncBase<T extends SupportedCloud> {
     }
   }
 
-  protected storeDataForService = (data: TDataForTable<T>, idToUse?: string) => (
+  public storeDataForService = (data: TDataForTable<T>, idToUse?: string) => (
     CloudSyncBase.DB!.table<ICloudSyncDB<T>['accounts']>(CloudSyncTable.ACCOUNTS).put({ ...data, service: idToUse || this.service } as TAccountsTable<T>)
   )
 

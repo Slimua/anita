@@ -35,7 +35,13 @@ const DropboxSyncFilePicker: React.FC = () => {
     const path = pathsHistoryRef.current[pathsHistoryRef.current.length - 1]
     const files = await DropboxHelper.instance.getFileListForPath(path)
     setState({ files, isChangingFolder: false })
-    ModalState.updateModal({ disableAction: false })
+    ModalState.updateModal({
+      ctas: [{
+        actionText: 'Save here',
+        disableAction: false,
+        handleClickAction: handleSaveHere.bind(null, path)
+      }]
+    })
   }
 
   useEffect(() => {
@@ -48,9 +54,11 @@ const DropboxSyncFilePicker: React.FC = () => {
     const selectedPath = pathsHistoryRef.current[pathsHistoryRef.current.length - 1]
     setState({ isChangingFolder: true, direction: 'back', currentFolder: null, selected: null })
     const modalProps: Partial<IModalProps> = {
-      actionText: 'Save here',
-      disableAction: true,
-      handleClickAction: handleSaveHere.bind(null, selectedPath)
+      ctas: [{
+        disableAction: true,
+        actionText: 'Save here',
+        handleClickAction: handleSaveHere.bind(null, selectedPath)
+      }]
     }
     if (!pathsHistoryRef.current.length) {
       modalProps.leftButton = undefined
@@ -62,9 +70,11 @@ const DropboxSyncFilePicker: React.FC = () => {
   const handleNavigateToFolder = async (currentFolder: ISharedFileMeta) => {
     const selectedPath = currentFolder.path || '/'
     ModalState.updateModal({
-      actionText: 'Save here',
-      disableAction: true,
-      handleClickAction: handleSaveHere.bind(null, selectedPath),
+      ctas: [{
+        actionText: 'Save here',
+        disableAction: true,
+        handleClickAction: handleSaveHere.bind(null, selectedPath)
+      }],
       leftButton: {
         id: 'file-picker-go-back',
         label: 'Back',
@@ -83,8 +93,10 @@ const DropboxSyncFilePicker: React.FC = () => {
     const actionText = selected === file ? `Save in ${TextTools.shortenString(file.name)}` : 'Save here'
     const selectedPath = selected ? selected.path : pathsHistoryRef.current[pathsHistoryRef.current.length - 1]
     ModalState.updateModal({
-      actionText,
-      handleClickAction: handleSaveHere.bind(null, selectedPath || '/')
+      ctas: [{
+        actionText,
+        handleClickAction: handleSaveHere.bind(null, selectedPath || '/')
+      }]
     })
     setState({ selected })
   }
@@ -116,9 +128,11 @@ const DropboxSyncFilePicker: React.FC = () => {
 
 export const FILE_PICKER_MODAL_CONFIG: IModalProps = {
   title: 'Pick a folder',
-  actionText: 'Save here',
   type: Type.primary,
-  handleClickAction: handleSaveHere.bind(null, '/'),
+  ctas: [{
+    actionText: 'Save here',
+    handleClickAction: handleSaveHere.bind(null, '/')
+  }],
   children: (
     <><DropboxSyncFilePicker /></>
   )

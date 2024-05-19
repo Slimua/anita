@@ -51,12 +51,12 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
     if (authData.access_token && authData.refresh_token) {
       const cleanRemoteUrl = authData.remoteBaseUrl.replace('https://', '').replace('http://', '')
       this.storeDataForService(authData, cleanRemoteUrl)
-      const client = new WordPressClient(authData)
+      const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
+      const client = new WordPressClient(remoteId, authData)
       try {
         const res = await client.getSpaceInfo()
         console.log('getAccessTokenFromCode ~ res:', res)
         if (res.statusText === 'OK') {
-          const remoteId = authData.remoteBaseUrl.replace(/(https?:\/\/)?(www\.)?/i, '').replace(/\/$/, '')
           this.saveRemoteInfo(remoteId, res.data)
         } else if (res?.statusText === 'rest_token_tampered') {
           ModalState.showModal({
@@ -64,9 +64,11 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
             title: 'Authentication error',
             hideCancelButton: true,
             type: Type.primary,
-            actionText: 'Open login page',
             children: `There is an issue with the your authentication data. Please re-authenticate on ${cleanRemoteUrl}.`,
-            handleClickAction: () => client.openLoginPage()
+            ctas: [{
+              actionText: 'Open login page',
+              handleClickAction: () => client.openLoginPage()
+            }]
           })
         }
       } catch (error: unknown) {
@@ -83,13 +85,15 @@ export class WordpressHelper extends CloudSyncBase<SupportedCloud.WORDPRESS> {
         title: 'Authentication error',
         hideCancelButton: true,
         type: Type.primary,
-        actionText: 'Open login page',
         children: `There is an issue with the your authentication data. Please re-authenticate on ${remoteId}.`,
-        handleClickAction: () => window.open(`https://${remoteId}/index.php?anita_oauth=1`)
+        ctas: [{
+          actionText: 'Open login page',
+          handleClickAction: () => window.open(`https://${remoteId}/index.php?anita_oauth=1`)
+        }]
       })
       return
     }
-    return new WordPressClient(authData)
+    return new WordPressClient(remoteId, authData)
   }
 
   public async syncWithRemote (remoteId: string) {

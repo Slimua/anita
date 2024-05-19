@@ -20,8 +20,6 @@ export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ proje
     if (Manager.getCurrentProject()?.getId() === project.id) {
       storeDispatcher({ type: REDUX_ACTIONS.resetCurrentProject })
     }
-    // This timeout must be equal or greater than the one in closeFn.
-    // Otherwise we would cause an update on an unmounted component.
     (await Manager.getProjectById(project.id, true))!.delete()
     navigate(ANITA_URLS.projectsList)
   }
@@ -29,9 +27,11 @@ export const DeleteProjectButton: React.FC<IDeleteProjectButtonProps> = ({ proje
   const handleClickModal = () => {
     ModalState.showModal({
       title: 'Delete Project',
-      actionText: 'Delete',
       type: Type.danger,
-      handleClickAction: handleClickDelete,
+      ctas: [{
+        actionText: 'Delete',
+        handleClickAction: handleClickDelete
+      }],
       icon: 'warningOutline',
       iconClassName: 'text-red-600',
       children: (

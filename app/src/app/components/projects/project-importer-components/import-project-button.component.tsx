@@ -43,10 +43,12 @@ export const ImportProjectButton: React.FC<IImportProjectButtonProps> = (props) 
 
     ModalState.showModal({
       title: 'Import project',
-      actionText: 'Import',
       type: Type.primary,
-      handleClickAction: handleClickImport,
-      disableAction: Object.keys(validObj).some(key => validObj[key] === false),
+      ctas: [{
+        actionText: 'Import',
+        handleClickAction: handleClickImport,
+        disableAction: Object.keys(validObj).some(key => validObj[key] === false)
+      }],
       children: (
         <ImportProjectModalContent projectSettings={project[RESERVED_AUDS_KEYS._settings][0]} />
       )
